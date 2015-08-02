@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SampleProduct</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_signin">SignIn</string>
+    <string name="facebook_app_id">667412450057713</string>
+    <string name="title_activity_login">Login</string>
+    <string name="base_url">http://ec2-52-8-187-187.us-west-1.compute.amazonaws.com:9999/v1</string>
+    <string name="SignIn_Url">/user</string>
+    <string name="Login_Url">/login</string>
+    <string name="seller_Url">/seller</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="login">LOGIN</string>
+    <string name="title_product_list">Product List</string>
+    <string name="title_activity_signup">Sign Up</string>
+    <string name="title_activity_product_details">ProductDetailsActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="item_limit">10</string>
+    <string name="list_pull_up">&amp;operation=pull</string>
+    <string name="action_search">search</string>
+    <string name="seach_text">Please enter search text</string>
+</resources>
