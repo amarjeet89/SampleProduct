@@ -1,5 +1,6 @@
 package com.prafull.product.activity;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -62,9 +64,25 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     }
 
     private void initializeControls() {
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_color)));       mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
-        listview = (ListView) findViewById(R.id.left_drawer);
-        leftView = (LinearLayout)findViewById(R.id.left_drawer_linear);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mDrawerLayout = (DrawerLayout) inflater.inflate(R.layout.nav_decor, null); // "null" is important.
+
+        // HACK: "steal" the first child of decor view
+        ViewGroup decor = (ViewGroup) getWindow().getDecorView();
+        View child = decor.getChildAt(0);
+        decor.removeView(child);
+        LinearLayout container = (LinearLayout) mDrawerLayout.findViewById(R.id.drawer_content); // This is the container we defined just now.
+        container.addView(child, 0);
+        mDrawerLayout.findViewById(R.id.left_drawer_linear).setPadding(0, getStatusBarHeight(), 0, 0);
+
+        // Make the drawer replace the first child
+        decor.addView(mDrawerLayout);
+
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_color)));
+
+      //  mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
+        listview = (ListView) mDrawerLayout.findViewById(R.id.left_drawer);
+        leftView = (LinearLayout) mDrawerLayout.findViewById(R.id.left_drawer_linear);
         mTitle = mDrawerTitle = getTitle();
 
         titles =NavigationDrawerActivity.this.getResources().getStringArray(
@@ -159,6 +177,16 @@ public class NavigationDrawerActivity extends AppCompatActivity {
          */
         //menu.findItem(R.id.alarm_icon).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
+    }
+
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
 

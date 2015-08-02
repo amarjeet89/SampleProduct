@@ -6,18 +6,20 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.prafull.product.R;
-import com.prafull.product.activity.EditUserProfileActivity;
 import com.prafull.product.activity.ProductDetailsActivity;
 import com.prafull.product.adapter.ProductListAdapter;
 import com.prafull.product.pojo.Product;
@@ -38,12 +40,13 @@ import java.util.ArrayList;
  * Created by SHUBHANSU on 8/2/2015.
  */
 
-public class ProductFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class ProductFragment extends Fragment implements AdapterView.OnItemClickListener, TextView.OnEditorActionListener {
     private ProgressDialog loadingProgress;
     private PullToUpdateListView productListView;
     private ArrayList<Product> productData;
     ArrayList<ArrayList<String>> images = new ArrayList<>();
     private boolean scrollDown = false;
+    private EditText searchText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,6 +92,8 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
         });
         productListView.setOnItemClickListener(this);
         loadProductList();
+        searchText = (EditText) view.findViewById(R.id.search_item);
+        searchText.setOnEditorActionListener(this);
 
     }
 
@@ -124,11 +129,6 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
     }
 
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_product_list, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
 
 
     BaseSync.OnTaskCompleted productLoadonScrollListener = new BaseSync.OnTaskCompleted() {
@@ -177,10 +177,20 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
     };
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_product_list, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_edit) {
-            startActivity(new Intent(getActivity(), EditUserProfileActivity.class));
+        if (item.getItemId() == R.id.action_search) {
+            if(searchText.getVisibility()==View.GONE){
+                searchText.setVisibility(View.VISIBLE);
+            }else{
+                searchText.setVisibility(View.GONE);
+            }
             return true;
         }
 
@@ -284,6 +294,37 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
         intent.putExtras(b);
         startActivity(intent);
 
+    }
+
+
+    @Override
+    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+        boolean handled = false;
+        if (i == EditorInfo.IME_ACTION_SEARCH) {
+            String searchText=textView.getText().toString();
+            searchText=searchText.trim();
+            if(searchText.length()>0){
+                searchProductItem(searchText);
+            }else{
+                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.seach_text),Toast.LENGTH_SHORT).show();
+            }
+
+            handled = true;
+        }
+        return handled;
+    }
+
+    private void searchProductItem(String searchText) {
+        String token = ProductPreferences.getInstance(getActivity().getApplicationContext()).getAccessToken();
+        String sellerListUrl = getString(R.string.base_url) + getString(R.string.seller_Url) + "?token=" + token+"&search="+searchText;
+        System.out.println("sellerListUrl : " + sellerListUrl);
+        loadingProgress = new ProgressDialog(getActivity(),
+                ProgressDialog.THEME_HOLO_LIGHT);
+        loadingProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        loadingProgress.setTitle(getResources().getString(R.string.app_name));
+        loadingProgress.setMessage("Searching..");
+        loadingProgress.show();
+        new BaseSync(productLoadListener, sellerListUrl, null, CommonUtil.HTTP_GET).execute();
     }
 
 }

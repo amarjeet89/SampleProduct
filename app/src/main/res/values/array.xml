@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="navigation_menu">
-        <item>Product List</item>
-        <item>User Profile</item>
+        <item>Home</item>
+        <item>Become a seller</item>
+        <item>Order</item>
+        <item>Offers</item>
+        <item>Refer</item>
+        <item>Contact Us</item>
     </array>
 </resources>

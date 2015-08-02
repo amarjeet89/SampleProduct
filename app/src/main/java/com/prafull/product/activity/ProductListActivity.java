@@ -133,7 +133,7 @@ public class ProductListActivity extends Activity implements AdapterView.OnItemC
     }
 
 
-    @Override
+ /*   @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_product_list, menu);
         return true;
@@ -152,7 +152,7 @@ public class ProductListActivity extends Activity implements AdapterView.OnItemC
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @Override
     public void onBackPressed() {

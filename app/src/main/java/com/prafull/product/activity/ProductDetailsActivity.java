@@ -1,6 +1,7 @@
 package com.prafull.product.activity;
 
 import android.app.Activity;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Gallery;
@@ -23,6 +24,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_details);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_color)));
         // Fetching data from a parcelable object passed from MainActivity
         Bundle b=getIntent().getExtras();
         images=b.getStringArrayList("pimage");

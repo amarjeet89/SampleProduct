@@ -2,11 +2,5 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.prafull.product.activity.NavigationDrawerActivity" >
-    <!--<item
-        android:id="@+id/alarm_icon"
-        android:icon="@drawable/alarm"
-        android:title="@string/alarm"
-        android:orderInCategory="0"
-        app:showAsAction="never">
-     </item>-->
+
 </menu>

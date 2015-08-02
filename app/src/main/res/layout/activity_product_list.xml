@@ -11,17 +11,9 @@
         android:layout_height="wrap_content"
         android:hint="@string/action_search"
         android:inputType="text"
-        android:visibility="gone"
+        android:textColor="@color/black"
+        android:visibility="visible"
         android:imeOptions="actionSearch" />
-
-
-    <!--<ListView
-        android:id="@+id/product_listview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-    </ListView> -->
-
 
     <com.prafull.product.pulltorefresh.PullToUpdateListView
         android:id="@+id/product_listview"
