@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/background_material_light"
     android:orientation="vertical" >
 
     <EditText
@@ -10,6 +11,8 @@
         android:drawableLeft="@drawable/ic_username"
         android:drawableStart="@drawable/ic_username"
         android:ems="10"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_tab_unselected"
         android:inputType="textPersonName"
         android:paddingTop="10pt"
         android:hint="Email Addrs"
@@ -25,6 +28,7 @@
         android:drawableLeft="@drawable/ic_pwd"
         android:drawableStart="@drawable/ic_pwd"
         android:ems="10"
+        android:textColor="@color/black"
         android:inputType="textPassword"
         android:paddingTop="10pt"
         android:hint="Password" >
@@ -37,6 +41,8 @@
         android:drawableLeft="@drawable/ic_pwd"
         android:drawableStart="@drawable/ic_pwd"
         android:ems="10"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_tab_unselected"
         android:inputType="textPassword"
         android:paddingTop="10pt"
         android:hint="Confirm Password" >
@@ -50,6 +56,8 @@
         android:drawableStart="@drawable/ic_call"
         android:maxLength="10"
         android:maxLines="1"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_tab_unselected"
         android:inputType="number"
         android:paddingTop="10pt"
         android:hint="Contact" >
@@ -63,6 +71,8 @@
         android:drawableStart="@drawable/ic_location_on"
         android:ems="10"
         android:inputType="textPassword"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_tab_unselected"
         android:paddingTop="10pt"
         android:hint="Address" >
     </EditText>

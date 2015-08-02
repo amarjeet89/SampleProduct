@@ -1,8 +1,4 @@
 package com.prafull.product.pulltorefresh;
-
-
-
-
 import android.content.Context;
 
 import android.graphics.drawable.Drawable;

@@ -1,7 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="white">#ffffff</color>
     <color name="active_color">#3F51B5</color>
     <color name="action_bar_color">#303F9F</color>
     <color name="white_text_color">#fff</color>
+    <item name="alertBgColor" type="color">#B5B4B2</item>
+    <item name="dialogBgColor" type="color">#F8961D</item>
+    <item name="tabBgColor" type="color">#FCA10F</item>
+    <item name="tabBorderColor" type="color">#E80001</item>
+    <item name="color_mta_blue" type="color">#125699</item>
+    <color name="ColorPrimary">#235FA5</color>
+    <color name="ColorPrimaryDark">#FF0E213A</color>
+    <color name="tabsScrollColor">#FFFFFF</color>
+    <color name="list_item_title">#000000</color>
+    <color name="list_background">#FFFFFF</color>
+    <color name="list_background_pressed">#992416</color>
+    <color name="list_divider">#272727</color>
+    <color name="counter_text_bg">#626262</color>
+    <color name="counter_text_color">#c5c4c4</color>
+    <color name="white">#ffffff</color>
+    <color name="actionbar_text">#ffffff</color>
+    <color name="text_tab_selected">#000000</color>
+    <color name="text_tab_unselected">#828282</color>
+    <color name="purple">#3A0A3A</color>
+    <color name="subscriber_actionbar_color">#232023</color>
+    <color name="subscriber_tab_color">#ffffff</color>
+    <color name="setDateColor">#f8B535</color>
+    <color name="notifications_tab_color">#fe9900</color>
+    <color name="scroll_view_bg">#DDDDDD</color>
+    <color name="notifications_tab_default_color">#7B551D</color>
+    <color name="black">#000</color>
+    <color name="alet_title_bg">#E38F0B</color>
+    <color name="alert_bg">#E2E5E4</color>
+    <color name="btn_bg">#6C94BC</color>
+    <color name="dark_orange">#EE7600</color>
+    <color name="yellow">#F7F016</color>
+    <color name="lemon">#D9F716</color>
+    <color name="green">#43F716</color>
+    <color name="set_up_btn_bg">#444</color>
+    <color name="transit_bus">#FCA10F</color>
+    <color name="transit_train">#3B5998</color>
+
 </resources>

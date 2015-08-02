@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/background_material_light"
     android:orientation="vertical">
 
     <EditText
@@ -11,8 +12,10 @@
         android:drawableStart="@drawable/ic_username"
         android:ems="10"
         android:hint="Email Address"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_tab_unselected"
         android:inputType="textPersonName"
-        android:text="admi@ds.com"
+        android:text="admin@ds.com"
         android:paddingTop="10pt">
 
         <requestFocus />
@@ -25,6 +28,8 @@
         android:drawableLeft="@drawable/ic_pwd"
         android:drawableStart="@drawable/ic_pwd"
         android:ems="10"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_tab_unselected"
         android:hint="Password"
         android:text="123456"
         android:inputType="textPassword"

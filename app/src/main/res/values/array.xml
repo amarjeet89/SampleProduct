@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="navigation_menu">
+        <item>Product List</item>
+        <item>User Profile</item>
+    </array>
+</resources>

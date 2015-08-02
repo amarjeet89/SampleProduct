@@ -20,4 +20,16 @@
     <string name="list_pull_up">&amp;operation=pull</string>
     <string name="action_search">search</string>
     <string name="seach_text">Please enter search text</string>
+    <string name="first_name">First Name</string>
+    <string name="user_Url">/user/</string>
+    <string name="token_Url">token=</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="mobile">Mobile No</string>
+    <string name="address">Address</string>
+    <string name="country">Country</string>
+    <string name="about_me">About me</string>
+    <string name="save">Save</string>
+    <string name="drawer_open">Menu Open</string>
+    <string name="drawer_close">Menu Close</string>
 </resources>

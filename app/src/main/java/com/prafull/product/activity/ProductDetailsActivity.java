@@ -2,6 +2,7 @@ package com.prafull.product.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Gallery;
 import android.widget.TextView;
 
@@ -15,7 +16,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class ProductDetailsActivity extends Activity {
+public class ProductDetailsActivity extends AppCompatActivity {
     ArrayList<String> images=new ArrayList<>();
     TextView descriptionTv;
     @Override

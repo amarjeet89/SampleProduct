@@ -12,6 +12,7 @@ public class ProductPreferences {
     private static final String LOGIN_WITH = "login_with";
     private static final String FB_ACCESS_TOKEN = "fb_access_token";
     private static final String ACCESS_TOKEN = "access_token";
+    private static final String USER_ID = "user_id";
     private static ProductPreferences instance;
     SharedPreferences pref;
     Editor editor;
@@ -62,5 +63,14 @@ public class ProductPreferences {
 
     public String getAccessToken() {
         return pref.getString(ACCESS_TOKEN, "");
+    }
+
+    public void setUserId(String userId) {
+        editor.putString(USER_ID, userId);
+        editor.commit();
+    }
+
+    public String getUserId() {
+        return pref.getString(USER_ID, "");
     }
 }

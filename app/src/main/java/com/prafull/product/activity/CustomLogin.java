@@ -1,9 +1,9 @@
 package com.prafull.product.activity;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,7 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class CustomLogin extends Activity {
+public class CustomLogin extends AppCompatActivity {
     private ProgressDialog loadingProgress;
 
 
@@ -25,7 +25,7 @@ public class CustomLogin extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-        getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_color)));
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_color)));
         loadingProgress = new ProgressDialog(CustomLogin.this,
                 ProgressDialog.THEME_HOLO_LIGHT);
         loadingProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -56,22 +56,6 @@ public class CustomLogin extends Activity {
         }
 
     }
-  /*  @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);//Menu Resource, Menu
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-               startActivity(new Intent(CustomLogin.this,Signin.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }*/
 
     BaseSync.OnTaskCompleted redrawListener = new BaseSync.OnTaskCompleted() {
 
@@ -86,8 +70,10 @@ public class CustomLogin extends Activity {
 
                         if(obj.getString("status").equals("success")){
                             String token=obj.getJSONObject("data").getJSONObject("data").getString("token");
+                            String userID =obj.getJSONObject("data").getJSONObject("data").getString("_id");
                             ProductPreferences.getInstance(getApplicationContext()).setAccessToken(token);
-                            startActivity(new Intent(CustomLogin.this,ProductListActivity.class));
+                            ProductPreferences.getInstance(getApplicationContext()).setUserId(userID);
+                            startActivity(new Intent(CustomLogin.this,NavigationDrawerActivity.class));
                         }else{
                             Toast.makeText(getApplicationContext(),obj.getString("status"),Toast.LENGTH_SHORT).show();
                         }
