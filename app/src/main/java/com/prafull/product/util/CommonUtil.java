@@ -11,7 +11,7 @@ public class CommonUtil {
     public static final String HTTP_POST = "POST";
     public static final String HTTP_PUT = "PUT";
     public static final String HTTP_DELETE = "DELETE";
-
+    public static final String USER_ID = "USERID";
 
 
 }

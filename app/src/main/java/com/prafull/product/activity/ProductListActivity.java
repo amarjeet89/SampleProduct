@@ -294,10 +294,8 @@ public class ProductListActivity extends Activity implements AdapterView.OnItemC
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Toast.makeText(getApplicationContext(),"postion : "+i,Toast.LENGTH_SHORT).show();
         Bundle b=new Bundle();
-        b.putString("desc",productData.get(i).getDescription());
-        b.putStringArrayList("pimage",images.get(i));
+        b.putString(CommonUtil.USER_ID,productData.get(i).getUserId());
         Intent intent = new Intent(getApplicationContext(), ProductDetailsActivity.class);
         intent.putExtras(b);
         startActivity(intent);

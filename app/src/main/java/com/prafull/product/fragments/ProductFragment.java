@@ -286,10 +286,8 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Toast.makeText(getActivity(), "postion : " + i, Toast.LENGTH_SHORT).show();
-        Bundle b = new Bundle();
-        b.putString("desc", productData.get(i).getDescription());
-        b.putStringArrayList("pimage", images.get(i));
+        Bundle b=new Bundle();
+        b.putString(CommonUtil.USER_ID, productData.get(i).getUserId());
         Intent intent = new Intent(getActivity(), ProductDetailsActivity.class);
         intent.putExtras(b);
         startActivity(intent);
