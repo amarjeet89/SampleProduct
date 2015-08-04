@@ -10,6 +10,7 @@
     <string name="SignIn_Url">/user</string>
     <string name="Login_Url">/login</string>
     <string name="seller_Url">/seller</string>
+    <string name="get_plate_list_url">/plate</string>
     <string name="sign_up">SIGN UP</string>
     <string name="login">LOGIN</string>
     <string name="title_product_list">Product List</string>
@@ -32,4 +33,6 @@
     <string name="save">Save</string>
     <string name="drawer_open">Menu Open</string>
     <string name="drawer_close">Menu Close</string>
+    <string name="title_activity_plate_list">PlateListActivity</string>
+    <string name="create_plate">Create New Plate</string>
 </resources>

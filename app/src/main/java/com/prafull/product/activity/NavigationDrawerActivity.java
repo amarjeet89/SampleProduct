@@ -1,6 +1,7 @@
 package com.prafull.product.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -105,6 +106,10 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                         break;
                     case 1:
                         fragment = new EditProfileFragment();
+                        break;
+                    case 3:
+                        //fragment = new EditProfileFragment();
+                        startActivity(new Intent(NavigationDrawerActivity.this,PlateListActivity.class));
                         break;
                 }
 
