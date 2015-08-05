@@ -2,7 +2,10 @@ package com.prafull.product.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -21,7 +24,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class PlateListActivity extends Activity {
+public class PlateListActivity extends AppCompatActivity{
 
     private ProgressDialog loadingProgress;
     private ArrayList<PlateItem> plateData;
@@ -31,6 +34,7 @@ public class PlateListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plate_list);
+       getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_color)));
         plateListView=(ListView)findViewById(R.id.plate_list_view);
         loadPlateList();
     }
@@ -63,8 +67,9 @@ public class PlateListActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        //noinspection SimplifiableIfStatement//
+        if (id == R.id.add) {
+            startActivity(new Intent(PlateListActivity.this,CustomPlate.class));
             return true;
         }
 

@@ -9,6 +9,7 @@
     <string name="base_url">http://ec2-52-8-187-187.us-west-1.compute.amazonaws.com:9999/v1</string>
     <string name="SignIn_Url">/user</string>
     <string name="Login_Url">/login</string>
+    <string name="Create_Plate_Url">/plate</string>
     <string name="seller_Url">/seller</string>
     <string name="get_plate_list_url">/plate</string>
     <string name="sign_up">SIGN UP</string>
@@ -34,5 +35,18 @@
     <string name="drawer_open">Menu Open</string>
     <string name="drawer_close">Menu Close</string>
     <string name="title_activity_plate_list">PlateListActivity</string>
+    <string name="title_activity_custom_plate">Custom Plate</string>
     <string name="create_plate">Create New Plate</string>
+    <string name="symbol">type</string>
+    <string name="dishtype">Dish type</string>
+    <string name="addplate">add</string>
+    <string-array name="currency_list">
+        <item>inr</item>
+        <item>$</item>
+    </string-array>
+    <string-array name="dish_list">
+        <item>veg</item>
+        <item>nonveg</item>
+    </string-array>
+
 </resources>

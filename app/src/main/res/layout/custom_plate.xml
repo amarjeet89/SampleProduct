@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_material_light"
+    android:orientation="vertical">
+    <EditText
+        android:id="@+id/plate_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_username"
+        android:drawableStart="@drawable/ic_username"
+        android:ems="10"
+        android:maxLength="100"
+        android:hint="Place Name"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_tab_unselected"
+        android:inputType="text"
+        android:text=""
+        android:paddingTop="10pt">
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/plate_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_pwd"
+        android:drawableStart="@drawable/ic_pwd"
+        android:ems="10"
+        android:maxLength="200"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_tab_unselected"
+        android:hint="Description"
+        android:inputType="text"
+        android:paddingTop="10pt"></EditText>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/plate_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_pwd"
+            android:drawableStart="@drawable/ic_pwd"
+            android:ems="10"
+            android:layout_weight="2"
+            android:textColor="@color/black"
+            android:textColorHint="@color/text_tab_unselected"
+            android:hint="Price"
+            android:text=""
+            android:inputType="number"
+            android:paddingTop="10pt"></EditText>
+    <Spinner
+        android:id="@+id/price_spinnerlist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:prompt="@string/symbol"
+        />
+    </LinearLayout>
+    <EditText
+        android:id="@+id/plate_cookingtime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_pwd"
+        android:drawableStart="@drawable/ic_pwd"
+        android:ems="10"
+        android:maxLength="200"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_tab_unselected"
+        android:hint="Cooking time in minutes"
+        android:text=""
+        android:inputType="text"
+        android:paddingTop="10pt"></EditText>
+    <!-- Text Label -->
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:text="@string/dishtype"
+        android:layout_margin="5dp"
+        />
+
+    <!-- Spinner Element -->
+    <Spinner
+        android:id="@+id/dishtype_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/dishtype"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="UploadImage"
+        android:layout_margin="5dp"
+        android:text="Upload Image"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="sendPlateData"
+        android:layout_margin="5dp"
+        android:text="Create/Edit"/>
+</LinearLayout>
