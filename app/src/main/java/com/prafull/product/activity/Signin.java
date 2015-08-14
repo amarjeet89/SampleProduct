@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,14 +17,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class Signin extends Activity {
+public class Signin extends AppCompatActivity{
     private ProgressDialog loadingProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin);
-        getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_color)));
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_color)));
        // getActionBar().set
         loadingProgress = new ProgressDialog(Signin.this,
                 ProgressDialog.THEME_HOLO_LIGHT);

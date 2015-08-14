@@ -33,7 +33,7 @@ public class EditUserProfileActivity extends Activity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_edit);
-        firstName = (TextView)findViewById(R.id.f_name);
+       /* firstName = (TextView)findViewById(R.id.f_name);
         lastName = (TextView)findViewById(R.id.l_name);
         email = (TextView)findViewById(R.id.email);
         mobileNo = (TextView)findViewById(R.id.mobile);
@@ -42,7 +42,7 @@ public class EditUserProfileActivity extends Activity implements View.OnClickLis
         aboutMe = (TextView)findViewById(R.id.about_me);
         save = (Button)findViewById(R.id.save);
         save.setOnClickListener(this);
-        getProfileData();
+        getProfileData();*/
     }
 
     private void getProfileData() {

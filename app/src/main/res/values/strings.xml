@@ -24,6 +24,8 @@
     <string name="seach_text">Please enter search text</string>
     <string name="first_name">First Name</string>
     <string name="user_Url">/user/</string>
+    <string name="seller_Url">/seller/</string>
+    <string name="seller_url_param">/seller</string>
     <string name="token_Url">token=</string>
     <string name="last_name">Last Name</string>
     <string name="email">Email</string>
@@ -34,6 +36,8 @@
     <string name="save">Save</string>
     <string name="drawer_open">Menu Open</string>
     <string name="drawer_close">Menu Close</string>
+    <string name="from_galary">From Gallary</string>
+    <string name="to_take_pic">Take A Picture</string>
     <string name="title_activity_plate_list">PlateListActivity</string>
     <string name="title_activity_custom_plate">Custom Plate</string>
     <string name="create_plate">Create New Plate</string>

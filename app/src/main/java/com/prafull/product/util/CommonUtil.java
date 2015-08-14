@@ -14,4 +14,5 @@ public class CommonUtil {
     public static final String USER_ID = "USERID";
 
 
+    public static final String IMAGE_DIRECTORY_NAME = "product";
 }

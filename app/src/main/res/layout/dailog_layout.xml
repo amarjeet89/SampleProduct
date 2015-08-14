@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dialogBgColor"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dailog_text"
+        android:layout_margin="5dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/from_galary"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:padding="10dp"
+            android:background="@color/com_facebook_blue"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/cancel"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/to_take_pic"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:background="@color/com_facebook_blue"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -14,72 +14,235 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/f_name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/first_name"
-                android:textColor="@color/black"
-                android:textColorHint="@color/text_tab_unselected"
-                android:textSize="18sp" />
+                android:orientation="horizontal"
+                android:layout_margin="5dp"
+                android:weightSum="2">
 
-            <EditText
-                android:id="@+id/l_name"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="Name"
+                    android:textColor="@color/black"
+                    android:layout_weight="1.5" />
+
+                <EditText
+                    android:layout_weight="0.5"
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:hint="Name"
+                    android:textColorHint="@color/text_tab_unselected"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/last_name"
-                android:textColor="@color/black"
-                android:textColorHint="@color/text_tab_unselected"
-                android:textSize="18sp" />
+                android:orientation="horizontal"
+                android:layout_margin="5dp"
+                android:weightSum="2">
 
-            <EditText
-                android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/email"
-                android:textColor="@color/black"
-                android:textColorHint="@color/text_tab_unselected"
-                android:textSize="18sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="Contact"
+                    android:textColor="@color/black"
+                    android:layout_weight="1.5" />
 
-            <EditText
-                android:id="@+id/mobile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/mobile"
-                android:textColor="@color/black"
-                android:textColorHint="@color/text_tab_unselected"
-                android:textSize="18sp" />
+                <EditText
+                    android:id="@+id/mobile"
+                    android:layout_weight="0.5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Mobile"
+                    android:numeric="integer"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/text_tab_unselected"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/address"
-                android:textColor="@color/black"
-                android:textColorHint="@color/text_tab_unselected"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/country"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/country"
-                android:textColor="@color/black"
-                android:textColorHint="@color/text_tab_unselected"
-                android:textSize="18sp" />
-
-            <EditText
+            <TextView
                 android:id="@+id/about_me"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:hint="@string/about_me"
+                android:layout_height="wrap_content"
+                android:text="@string/about_me"
                 android:textColor="@color/black"
-                android:textColorHint="@color/text_tab_unselected"
                 android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/about_me_text"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="40dp"
+                android:textColorHint="@color/text_tab_unselected"
+                android:hint="About"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="5dp"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="Address"
+                    android:textColor="@color/black"
+                    android:layout_weight="1.5" />
+
+                <EditText
+                    android:id="@+id/address"
+                    android:layout_weight="0.5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:hint="Address"
+                    android:textColorHint="@color/text_tab_unselected"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="5dp"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="Area"
+                    android:textColor="@color/black"
+                    android:layout_weight="1.5" />
+
+                <EditText
+                    android:id="@+id/area"
+                    android:layout_weight="0.5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:hint="Area"
+                    android:textColorHint="@color/text_tab_unselected"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="5dp"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="City"
+                    android:textColor="@color/black"
+                    android:layout_weight="1.5" />
+
+                <EditText
+                    android:id="@+id/city"
+                    android:layout_weight="0.5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="City"
+                    android:textColorHint="@color/text_tab_unselected"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="5dp"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="State"
+                    android:textColor="@color/black"
+                    android:layout_weight="1.5" />
+
+                <EditText
+                    android:id="@+id/state"
+                    android:layout_weight="0.5"
+                    android:hint="State"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/text_tab_unselected"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="5dp"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="Pincode"
+                    android:textColor="@color/black"
+                    android:layout_weight="1.5" />
+
+                <EditText
+                    android:id="@+id/pincode"
+                    android:layout_weight="0.5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:hint="Pin"
+                    android:numeric="integer"
+                    android:maxLines="6"
+                    android:textColorHint="@color/text_tab_unselected"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+
+
 
             <Button
-                android:id="@+id/save"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:id="@+id/pick_img"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:background="@color/active_color"
+                android:text="Upload Image" />
+
+            <Button
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="5dp"
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
