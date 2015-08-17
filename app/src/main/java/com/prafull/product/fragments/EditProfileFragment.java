@@ -252,7 +252,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                     try {
                         JSONObject obj = new JSONObject(str);
                         if(obj.getString("status").equals("success")){
-                            Toast.makeText(getActivity(), obj.getString("Updated"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.seller_updated_successfully), Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(getActivity(), obj.getString("status"), Toast.LENGTH_SHORT).show();
                         }

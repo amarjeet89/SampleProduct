@@ -24,7 +24,6 @@
     <string name="seach_text">Please enter search text</string>
     <string name="first_name">First Name</string>
     <string name="user_Url">/user/</string>
-    <string name="seller_Url">/seller/</string>
     <string name="seller_url_param">/seller</string>
     <string name="token_Url">token=</string>
     <string name="last_name">Last Name</string>
@@ -44,6 +43,9 @@
     <string name="symbol">type</string>
     <string name="dishtype">Dish type</string>
     <string name="addplate">add</string>
+    <string name="seller_updated_successfully">Seller details upated successfully</string>
+    <string name="title_seller_list">Seller List</string>
+    <string name="title_activity_seller_details">Seller Detail</string>
     <string-array name="currency_list">
         <item>inr</item>
         <item>$</item>

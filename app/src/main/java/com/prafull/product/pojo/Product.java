@@ -21,7 +21,7 @@ public class Product{
   //  ArrayList<ProductImage> imagesList;
 
     public Product(String title, String userId, String address, String  item_pics,
-                   String description,String contacts,Double latitude,Double logitude) {
+                   String description,Double latitude,Double logitude) {
        try {
            this.userId = userId;
            this.address = address;
@@ -31,7 +31,7 @@ public class Product{
            this.icon_url = itemArray.getString(0);
            this.title = title;
            this.description = description;
-           this.contacts = contacts;
+           //this.contacts = contacts;
            this.product_pics = item_pics;
            //this.imagesList=imagesList;
        }catch (Exception e){
