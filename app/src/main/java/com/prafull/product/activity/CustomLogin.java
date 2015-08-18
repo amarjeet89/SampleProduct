@@ -73,7 +73,7 @@ public class CustomLogin extends AppCompatActivity {
                             String userID =obj.getJSONObject("data").getJSONObject("data").getString("_id");
                             ProductPreferences.getInstance(getApplicationContext()).setAccessToken(token);
                             ProductPreferences.getInstance(getApplicationContext()).setUserId(userID);
-                            startActivity(new Intent(CustomLogin.this,NavigationDrawerActivity.class));
+                            startActivity(new Intent(CustomLogin.this,OTPActivity.class));
                         }else{
                             Toast.makeText(getApplicationContext(),obj.getString("status"),Toast.LENGTH_SHORT).show();
                         }
