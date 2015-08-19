@@ -21,7 +21,10 @@ import android.widget.Toast;
 
 import com.prafull.product.R;
 import com.prafull.product.activity.ProductDetailsActivity;
+import com.prafull.product.adapter.PlateListAdapter;
+import com.prafull.product.adapter.ProductImagesAdapter;
 import com.prafull.product.adapter.ProductListAdapter;
+import com.prafull.product.pojo.Plate;
 import com.prafull.product.pojo.Product;
 import com.prafull.product.pojo.ProductImage;
 import com.prafull.product.pulltorefresh.IonRefreshListener;
@@ -269,8 +272,7 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
                         }
                         productData.add(new Product(itemData.getString("title"), itemData.getString("user_id"),
                                 itemData.getString("seller_address"), itemData.getJSONArray("item_pics").toString(),
-                                itemData.getString("description"), itemData.getJSONArray("contacts").getString(0),
-                                placeLatitude, placeLogitude));
+                                itemData.getString("description"), placeLatitude, placeLogitude));
 
                     }
 
@@ -286,12 +288,23 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Bundle b=new Bundle();
-        b.putString(CommonUtil.USER_ID, productData.get(i).getUserId());
-        Intent intent = new Intent(getActivity(), ProductDetailsActivity.class);
-        intent.putExtras(b);
-        startActivity(intent);
+      //  Bundle b=new Bundle();
+       // b.putString(CommonUtil.USER_ID, productData.get(i).getUserId());
+       // Intent intent = new Intent(getActivity(), ProductDetailsActivity.class);
+        //intent.putExtras(b);
+       // startActivity(intent);
+        getProductDetails(productData.get(i).getUserId());
+    }
 
+    private void getProductDetails(String userId) {
+        loadingProgress.setMessage("Loading Seller Details..");
+        loadingProgress.show();
+        userId="55cf1d4769ccf168d4ec03ae";
+        String token = ProductPreferences.getInstance(getActivity().getApplicationContext()).getAccessToken();
+        String sellerListUrl = getString(R.string.base_url) + getString(R.string.seller_Url)+"/"+userId+"?token="+token;
+        System.out.println("Get_SinglesellerListUrl : " + sellerListUrl);
+        loadingProgress.show();
+        new BaseSync(sellerDetailLoadListener, sellerListUrl, null, CommonUtil.HTTP_GET).execute();
     }
 
 
@@ -324,5 +337,52 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
         loadingProgress.show();
         new BaseSync(productLoadListener, sellerListUrl, null, CommonUtil.HTTP_GET).execute();
     }
+
+
+    BaseSync.OnTaskCompleted sellerDetailLoadListener = new BaseSync.OnTaskCompleted() {
+
+        @Override
+        public void onTaskCompleted(final String str) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    try {
+                        JSONObject obj = new JSONObject(str);
+                        System.out.println(obj);
+                        if (obj.getString("status").equals("success")) {
+                           // Toast.makeText(getActivity().getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                            if (obj.has("data")) {
+                                 Bundle b=new Bundle();
+                                 b.putString(CommonUtil.SELLER_DETAILS,obj.toString());
+                                 Intent intent = new Intent(getActivity(), ProductDetailsActivity.class);
+                                 intent.putExtras(b);
+                                 startActivity(intent);
+                            }
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+
+        @Override
+        public void onTaskFailure(final String str) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    Toast.makeText(getActivity().getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    };
 
 }

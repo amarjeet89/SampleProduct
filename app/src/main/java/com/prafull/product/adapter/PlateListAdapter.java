@@ -9,20 +9,14 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.Volley;
 import com.prafull.product.R;
 import com.prafull.product.pojo.Plate;
-import com.prafull.product.pojo.Product;
-import com.prafull.product.util.LruBitmapCache;
 
 import java.util.ArrayList;
 
 public class PlateListAdapter extends ArrayAdapter<Plate> {
     private static LayoutInflater inflater = null;
     Context context;
-    ImageLoader mImageLoader;
-    RequestQueue mRequestQueue;
 
 
     public PlateListAdapter(Context context, ArrayList<Plate> plateListArray) {

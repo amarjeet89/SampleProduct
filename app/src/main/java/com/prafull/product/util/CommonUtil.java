@@ -15,4 +15,5 @@ public class CommonUtil {
 
 
     public static final String IMAGE_DIRECTORY_NAME = "product";
+    public static final String SELLER_DETAILS = "Seller_details";
 }

@@ -43,6 +43,9 @@
     <string name="symbol">type</string>
     <string name="dishtype">Dish type</string>
     <string name="addplate">add</string>
+    <string name="seller_updated_successfully">Seller details upated successfully</string>
+    <string name="title_seller_list">Seller List</string>
+    <string name="title_activity_seller_details">Seller Detail</string>
     <string-array name="currency_list">
         <item>inr</item>
         <item>$</item>

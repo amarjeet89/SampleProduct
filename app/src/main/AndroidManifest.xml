@@ -49,7 +49,7 @@
 
         <activity
             android:name=".activity.ProductListActivity"
-            android:label="@string/title_product_list"
+            android:label="@string/title_seller_list"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -64,7 +64,7 @@
         </activity>
         <activity
             android:name=".activity.ProductDetailsActivity"
-            android:label="@string/title_activity_product_details"
+            android:label="@string/title_activity_seller_details"
             android:screenOrientation="portrait" >
         </activity>
         <activity

@@ -276,7 +276,7 @@ public class ProductListActivity extends Activity implements AdapterView.OnItemC
                         }
                         productData.add(new Product(itemData.getString("title"), itemData.getString("user_id"),
                                 itemData.getString("seller_address"),itemData.getJSONArray("item_pics").toString(),
-                                itemData.getString("description"), itemData.getJSONArray("contacts").getString(0),
+                                itemData.getString("description"),
                                 placeLatitude,placeLogitude));
 
                     }
