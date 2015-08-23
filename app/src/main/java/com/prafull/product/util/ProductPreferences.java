@@ -14,6 +14,7 @@ public class ProductPreferences {
     private static final String ACCESS_TOKEN = "access_token";
     private static final String USER_ID = "user_id";
     private static final String SELLER_ID = "seller_id";
+    private static final String OTP_STATUS = "otp";
     private static ProductPreferences instance;
     SharedPreferences pref;
     Editor editor;
@@ -42,6 +43,15 @@ public class ProductPreferences {
     public Boolean getLoginStatus() {
         return pref.getBoolean(LOGIN_STATUS, false);
     }
+
+    public void setOTPStatus(boolean loginStatus) {
+        editor.putBoolean(OTP_STATUS, loginStatus);
+        editor.commit();
+    }
+    public Boolean getOTPStatus() {
+        return pref.getBoolean(OTP_STATUS, false);
+    }
+
 
     public void setLoginWith(String loginWith) {
         editor.putString(LOGIN_WITH, loginWith);
