@@ -111,6 +111,10 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                         //fragment = new EditProfileFragment();
                         startActivity(new Intent(NavigationDrawerActivity.this,PlateListActivity.class));
                         break;
+                    case 5:
+                        //fragment = new EditProfileFragment();
+                        startActivity(new Intent(NavigationDrawerActivity.this,SampleActivity.class));
+                        break;
                 }
 
                 if (fragment != null) {
