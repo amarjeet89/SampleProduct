@@ -25,8 +25,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/editTextStyle"
-        android:text="@string/enter_mobile_no"
-        android:id="@+id/tv_mobile_no"/>
+        android:hint="@string/enter_mobile_no"
+        android:inputType="number"
+        android:id="@+id/tv_mobile_no">
+        <requestFocus/>
+    </EditText>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -53,8 +56,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enter_otp"
+            android:inputType="numberPassword"
             style="@style/editTextStyle"
-            android:id="@+id/tv_otp"/>
+            android:id="@+id/tv_otp">
+
+            </EditText>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -1,16 +1,34 @@
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
     android:layout_height="match_parent">
+    <fragment
+        android:id="@+id/map"
+        class="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </fragment>
+    <AutoCompleteTextView
+        android:id="@+id/cur_loc_text"
+        style="@style/editTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="@string/enter_location"
+        android:inputType="textPersonName"
+        android:padding="5dp"
+        android:selectAllOnFocus="true"
+        android:textSize="14sp" />
 
    <Button
-       android:layout_width="wrap_content"
+       android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:id="@+id/set_address"
+       android:layout_gravity="bottom"
        android:text="@string/set_address"/>
 
 
 
-</LinearLayout>
+</FrameLayout>
