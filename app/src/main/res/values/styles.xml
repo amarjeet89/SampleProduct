@@ -14,4 +14,10 @@
     </style>
     <style name="AppTheme" parent="Theme.AppCompat">
     </style>
+
+    <style name="editTextStyle">
+        <item name="android:textColor">#000</item>
+        <item name="android:textSize">18sp</item>
+
+    </style>
 </resources>

@@ -55,11 +55,11 @@
         <item>nonveg</item>
     </string-array>
     <string name="title_activity_map">MapActivity</string>
-    <string name="title_activity_otp">OTPActivity</string>
+    <string name="title_activity_otp">Verification</string>
     <string name="enter_mobile_no">Enter Mobile Number</string>
     <string name="get_otp">Get OTP</string>
     <string name="enter_otp">Enter OTP</string>
-    <string name="varify_otp">Varify</string>
+    <string name="verify_otp">Process</string>
     <string name="set_address">Set Address</string>
 
 </resources>

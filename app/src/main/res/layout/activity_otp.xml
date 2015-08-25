@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
+    android:layout_gravity="center"
     android:padding="10dp">
 
 <LinearLayout
@@ -23,7 +24,9 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_mobile_no"/>
+        style="@style/editTextStyle"
+        android:text="@string/enter_otp"
+        android:id="@+id/enter_mobile_no"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,12 +52,14 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/enter_otp"
+            style="@style/editTextStyle"
             android:id="@+id/tv_otp"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/varify_otp"
-            android:text="@string/varify_otp"/>
+            android:id="@+id/verify_otp"
+            android:text="@string/verify_otp"/>
 
 </LinearLayout>
 

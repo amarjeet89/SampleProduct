@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Gallery;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     Gallery gallery;
     private ProgressDialog loadingProgress;
     ListView plateListview;
+    PlateListAdapter plateListAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,9 +78,9 @@ private void populateSellerDetails(String jsonStr){
         System.out.println();
         for (int j = 0; j < plateArray.length(); j++) {
             JSONObject plateobj = plateArray.getJSONObject(j);
-            plates.add(new Plate(plateobj.getString("title"), plateobj.getInt("quantity"), plateobj.getInt("price")));
+            plates.add(new Plate(plateobj.getString("title"), plateobj.getInt("quantity"), plateobj.getInt("price"),false));
         }
-        PlateListAdapter plateListAdapter = new PlateListAdapter(getApplicationContext(), plates);
+         plateListAdapter = new PlateListAdapter(getApplicationContext(), plates);
         if (plateListview != null) {
             plateListview.setAdapter(plateListAdapter);
         }
@@ -87,7 +89,17 @@ private void populateSellerDetails(String jsonStr){
     }
 
 }
-
+public void selectedItems(View v){
+    String result = "Selected Product are :";
+    int totalAmount=0;
+    for (Plate p : plateListAdapter.getBox()) {
+        if (p.box){
+            result += "\n" + p.getQty();
+            totalAmount+=p.getPrice();
+        }
+    }
+    Toast.makeText(this, result+"\n"+"Total Amount:="+totalAmount, Toast.LENGTH_LONG).show();
+}
 
 
 }

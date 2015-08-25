@@ -7,11 +7,13 @@ public class Plate {
     String title;
     int qty;
     int price;
+    public boolean box;
 
-    public Plate(String title, int qty, int price) {
+    public Plate(String title, int qty, int price,boolean box) {
         this.title = title;
         this.qty = qty;
         this.price = price;
+        this.box=box;
     }
 
     public String getTitle() {

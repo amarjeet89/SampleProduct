@@ -116,6 +116,11 @@
             android:name="io.card.payment.CardIOActivity"
             android:configChanges="keyboardHidden|orientation" />
         <activity android:name="io.card.payment.DataEntryActivity" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCs628eCE-MvbR-46wXkJsT323Lutr_wkQ" />
+
     </application>
 
 </manifest>
