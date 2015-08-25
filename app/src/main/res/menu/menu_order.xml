@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.prafull.product.activity.ProductDetailsActivity">
+    <item
+        android:id="@+id/action_order"
+        android:title="@string/action_order"
+        app:showAsAction="always" />
+
+</menu>

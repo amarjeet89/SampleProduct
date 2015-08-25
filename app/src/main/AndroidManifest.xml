@@ -98,6 +98,10 @@
             android:name=".activity.SampleActivity"
             android:label="Sapmple PAypal" >
         </activity>
+        <activity
+            android:name=".activity.ConfirmOrderActivity"
+            android:label="Confirm Order" >
+        </activity>
 
         <service android:name="com.paypal.android.sdk.payments.PayPalService"
             android:exported="false" />
