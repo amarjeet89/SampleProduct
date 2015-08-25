@@ -25,7 +25,7 @@ public class OTPActivity extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_color)));
-        otp_varify=(Button)findViewById(R.id.varify_otp);
+        otp_varify=(Button)findViewById(R.id.verify_otp);
         send_otp=(Button)findViewById(R.id.send_otp);
         et_otp=(EditText)findViewById(R.id.tv_otp);
         et_contact_info=(EditText)findViewById(R.id.tv_mobile_no);
@@ -61,7 +61,7 @@ public class OTPActivity extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
 
-            case R.id.varify_otp:
+            case R.id.verify_otp:
                 startActivity(new Intent(OTPActivity.this,MapActivity.class));
 
                 break;
