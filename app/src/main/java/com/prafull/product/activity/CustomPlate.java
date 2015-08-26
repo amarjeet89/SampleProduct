@@ -45,19 +45,94 @@ import java.util.ArrayList;
 public class CustomPlate extends AppCompatActivity implements View.OnClickListener, ImagePickerFragmentForPlate.DialogCallBack {
     private static final int RESULT_LOAD_IMG = 01;
     private static final int RESULT_CAPTURE_IMG = 02;
-    private String[] mPrices;
-    private String[] mDishes;
     Spinner price_spinner, dish_spinner;
     String mCurrency;
     String mDishtype;
     Button upload_image, create_plate;
     EditText mTitle, mDesc, mPrice, mCooktime, plate_item;
+    private String[] mPrices;
+    private String[] mDishes;
     private ProgressDialog loadingProgress;
+    BaseSync.OnTaskCompleted redrawListener = new BaseSync.OnTaskCompleted() {
+
+        @Override
+        public void onTaskCompleted(final String str) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    try {
+                        JSONObject obj = new JSONObject(str);
+                        System.out.println(obj);
+                        if (obj.getString("status").equals("success")) {
+                            Toast.makeText(getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), obj.getString("status") + obj.getString("error_msg"), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+        @Override
+        public void onTaskFailure(final String str) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    };
     private ImagePickerFragmentForPlate imagePicker;
     private FragmentManager fragmentManager;
     private Uri imageUri;
     private String mSelectImgPath;
     private ArrayList<Object> imageList;
+    BaseSync.OnTaskCompleted imageUploadListener = new BaseSync.OnTaskCompleted() {
+
+        @Override
+        public void onTaskCompleted(final String str) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        loadingProgress.cancel();
+                        JSONObject obj = new JSONObject(str);
+                        if (obj.getString("status").equals("success")) {
+                            JSONObject data = obj.getJSONObject("data");
+                            imageList.add(data.getJSONArray("image").getString(0));
+                            Toast.makeText(getApplicationContext(), "Image uploaded successful", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+        @Override
+        public void onTaskFailure(final String str) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +166,6 @@ public class CustomPlate extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 mCurrency = mPrices[i];
-                Toast.makeText(getApplicationContext(), mCurrency, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -103,7 +177,6 @@ public class CustomPlate extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 mDishtype = mDishes[i];
-                Toast.makeText(getApplicationContext(), mDishtype, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -150,44 +223,6 @@ public class CustomPlate extends AppCompatActivity implements View.OnClickListen
         }
 
     }
-
-    BaseSync.OnTaskCompleted redrawListener = new BaseSync.OnTaskCompleted() {
-
-        @Override
-        public void onTaskCompleted(final String str) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    try {
-                        JSONObject obj = new JSONObject(str);
-                        System.out.println(obj);
-                        if (obj.getString("status").equals("success")) {
-                            Toast.makeText(getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), obj.getString("status") + obj.getString("error_msg"), Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        }
-
-        @Override
-        public void onTaskFailure(final String str) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    };
 
     @Override
     public void onClick(View view) {
@@ -288,43 +323,4 @@ public class CustomPlate extends AppCompatActivity implements View.OnClickListen
             e.printStackTrace();
         }
     }
-
-    BaseSync.OnTaskCompleted imageUploadListener = new BaseSync.OnTaskCompleted() {
-
-        @Override
-        public void onTaskCompleted(final String str) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        loadingProgress.cancel();
-                        JSONObject obj = new JSONObject(str);
-                        if (obj.getString("status").equals("success")) {
-                            JSONObject data = obj.getJSONObject("data");
-                            imageList.add(data.getJSONArray("image").getString(0));
-                            Toast.makeText(getApplicationContext(), "Image uploaded successful", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        }
-
-        @Override
-        public void onTaskFailure(final String str) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    };
 }
