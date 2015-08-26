@@ -170,7 +170,6 @@
             android:textColor="@color/white"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:id="@+id/add_items"
             android:layout_weight="1" />
 
         <Button

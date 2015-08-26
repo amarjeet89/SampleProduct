@@ -27,6 +27,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     private TextView couponValue;
     private double totalAmount = 0;
     private Button addMoreItem;
+    private Button checkOut;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +40,8 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         couponValue = (TextView) findViewById(R.id.coupon_value);
         addMoreItem = (Button) findViewById(R.id.add_more_item);
         addMoreItem.setOnClickListener(this);
+        checkOut = (Button) findViewById(R.id.check_out);
+        checkOut.setOnClickListener(this);
         confirmAdapter = new ConfirmAdapter(this, plates);
         confirmListView.setAdapter(confirmAdapter);
 
@@ -64,12 +67,16 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         if (v.getId() == R.id.add_more_item) {
             finish();
+        }else if(v.getId() == R.id.check_out){
+            startActivity(new Intent(this,SampleActivity.class));
         }
     }
 
     public void updateSelectedOrder(int position) {
         if (plates.size() > 0) {
             plates.remove(position);
+            if (plates.size() == 0)
+                finish();
             confirmAdapter.refresh(plates);
             updateTotalValue();
         } else if (plates.size() == 0) {
