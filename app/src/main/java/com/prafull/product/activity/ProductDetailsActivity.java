@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -39,7 +41,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private ProgressDialog loadingProgress;
     ListView plateListview;
     PlateListAdapter plateListAdapter;
-
+    ArrayList<Plate> plates;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +55,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         descriptionTv = (TextView) findViewById(R.id.product_description);
         gallery = (Gallery) findViewById(R.id.product_images);
         plateListview = (ListView) findViewById(R.id.platelist);
+        plateListview.setItemsCanFocus(true);
         Bundle b = getIntent().getExtras();
         if (b != null) {
             if (b.containsKey(CommonUtil.SELLER_DETAILS)) {
@@ -98,7 +101,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 gallery.setAdapter(productImageAdapter);
             }
             JSONArray plateArray = dataObj.getJSONArray("plate");
-            ArrayList<Plate> plates = new ArrayList<>();
+            plates = new ArrayList<>();
             System.out.println();
             for (int j = 0; j < plateArray.length(); j++) {
                 JSONObject plateobj = plateArray.getJSONObject(j);
@@ -115,16 +118,35 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     }
 
-    public void selectedItems(View v) {
-        String result = "Selected Product are :";
-        int totalAmount = 0;
-        for (Plate p : plateListAdapter.getBox()) {
-            if (p.box) {
-                result += "\n" + p.getQty();
-                totalAmount += p.getPrice();
+    public void selectedItems() {
+        CheckBox c;
+        EditText e;
+        String title;
+        View mLayout;
+        ArrayList<Plate> selectedPlates=new ArrayList<Plate>();
+        for (int i = 0; i < plateListAdapter.getCount(); i++){
+            mLayout=plateListview.getChildAt(i);
+            if(mLayout!=null){
+                c=(CheckBox)mLayout.findViewById(R.id.cbBox);
+                if (c!=null){
+                    if(c.isChecked()){
+                        e=(EditText)mLayout.findViewById(R.id.itemcount);
+                        if (e!=null)
+                        {
+                            title=e.getText().toString();// always get the orignal content : 123 then 345 (not the data user set in the EditText item)
+                            int qty=(Integer.parseInt(title));
+                            Plate selectPlate=new Plate(plates.get(i).getTitle(),qty,plates.get(i).getPrice(),false);
+                            selectedPlates.add(selectPlate);
+                        }
+                    }
+                }
             }
         }
-        Toast.makeText(this, result + "\n" + "Total Amount:=" + totalAmount, Toast.LENGTH_LONG).show();
+        if(selectedPlates.size()>0) {
+            Intent intent = new Intent(this, ConfirmOrderActivity.class);
+            intent.putParcelableArrayListExtra(CommonUtil.CONFIRM_ORDER, selectedPlates);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -138,21 +160,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
         // Handle action bar actions click
         switch (item.getItemId()) {
             case R.id.action_order:
-                ArrayList<Plate> selectedPlate = new ArrayList<Plate>();
-                for (Plate p : plateListAdapter.getBox()) {
-                    if (p.box) {
-                        selectedPlate.add(p);
-                    }
-                }
-                if(selectedPlate.size()>0) {
-                    Intent intent = new Intent(this, ConfirmOrderActivity.class);
-                    intent.putParcelableArrayListExtra(CommonUtil.CONFIRM_ORDER,selectedPlate);
-                    startActivity(intent);
-                }
+                selectedItems();
                 break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
@@ -19,8 +21,7 @@ import java.util.ArrayList;
 public class PlateListAdapter extends ArrayAdapter<Plate> {
     private static LayoutInflater inflater = null;
     Context context;
-
-ArrayList<Plate>objects;
+    ArrayList<Plate>objects;
     public PlateListAdapter(Context context, ArrayList<Plate> plateListArray) {
         super(context, 0, plateListArray);
         this.context = context;
@@ -38,7 +39,7 @@ ArrayList<Plate>objects;
             vi = inflater.inflate(R.layout.platelist_row, null);
             holder = new ViewHolder();
             holder.titleTextView = (TextView)vi.findViewById(R.id.itemdesc);
-            holder.qtyTextView=(TextView)vi.findViewById(R.id.itemqty);
+            holder.itemCount=(EditText)vi.findViewById(R.id.itemcount);
             holder.cb=(CheckBox)vi.findViewById(R.id.cbBox);
             vi.setTag(holder);
         }else{
@@ -46,7 +47,7 @@ ArrayList<Plate>objects;
         }
         Plate plateData=getItem(position);
         Plate p = getProduct(position);
-        holder.titleTextView.setText(plateData.getTitle()+"-"+plateData.getQty()+"-"+plateData.getPrice()+"/-");
+        holder.titleTextView.setText(plateData.getTitle() + "-" + plateData.getQty() + "-" + plateData.getPrice() + "/-");
         holder.cb.setOnCheckedChangeListener(myCheckChangList);
         holder.cb.setTag(position);
         holder.cb.setChecked(p.box);
@@ -55,7 +56,7 @@ ArrayList<Plate>objects;
 
     static class ViewHolder{
         TextView titleTextView;
-        TextView qtyTextView;
+        EditText itemCount;
         CheckBox cb;
     }
     Plate getProduct(int position) {
@@ -71,7 +72,6 @@ ArrayList<Plate>objects;
         }
         return box;
     }
-
     CompoundButton.OnCheckedChangeListener myCheckChangList = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView,
                                      boolean isChecked) {
