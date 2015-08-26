@@ -1,6 +1,7 @@
 package com.prafull.product.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +45,8 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         checkOut.setOnClickListener(this);
         confirmAdapter = new ConfirmAdapter(this, plates);
         confirmListView.setAdapter(confirmAdapter);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_color)));
+
 
         updateTotalValue();
 
