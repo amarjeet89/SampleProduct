@@ -41,7 +41,8 @@ public class PlateListActivity extends AppCompatActivity{
 
     private void loadPlateList() {
         String token = ProductPreferences.getInstance(getApplicationContext()).getAccessToken();
-        String sellerListUrl = getString(R.string.base_url) + getString(R.string.get_plate_list_url) + "?token=" + token;
+        String sellerId = ProductPreferences.getInstance(getApplicationContext()).getSellerId();
+        String sellerListUrl = getString(R.string.base_url) + getString(R.string.get_plate_list_url) + "?token=" + token+"&seller_user_id="+sellerId;
         System.out.println("sellerListUrl : " + sellerListUrl);
         loadingProgress = new ProgressDialog(PlateListActivity.this,
                 ProgressDialog.THEME_HOLO_LIGHT);

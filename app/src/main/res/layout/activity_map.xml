@@ -27,6 +27,7 @@
        android:layout_height="wrap_content"
        android:id="@+id/set_address"
        android:layout_gravity="bottom"
+       android:background="@color/active_color"
        android:text="@string/set_address"/>
 
 

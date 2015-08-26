@@ -34,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/send_otp"
+        android:background="@color/active_color"
         android:text="@string/get_otp"/>
     </LinearLayout>
 
@@ -65,6 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/verify_otp"
+            android:background="@color/active_color"
             android:text="@string/verify_otp"/>
 
 </LinearLayout>

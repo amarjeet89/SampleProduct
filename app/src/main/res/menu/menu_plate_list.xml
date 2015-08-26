@@ -2,6 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.prafull.product.activity.PlateListActivity">
-    <item android:id="@+id/add" android:title="@string/addplate"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/add"
+        android:title="@string/addplate"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+
 </menu>

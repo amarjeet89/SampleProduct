@@ -62,12 +62,14 @@
             android:textColor="@color/white"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:id="@+id/add_items"
             android:layout_weight="1" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Check Out"
+            android:id="@+id/check_out"
             android:background="@color/com_facebook_blue"
             android:textColor="@color/white"
             android:layout_marginLeft="5dp"
