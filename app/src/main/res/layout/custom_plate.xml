@@ -3,16 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_material_light"
+    android:padding="10dp"
     android:orientation="vertical">
     <EditText
         android:id="@+id/plate_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_username"
-        android:drawableStart="@drawable/ic_username"
         android:ems="10"
         android:maxLength="100"
-        android:hint="Place Name"
+        android:hint="Plate Name"
         android:textColor="@color/black"
         android:textColorHint="@color/text_tab_unselected"
         android:inputType="text"
@@ -20,13 +19,24 @@
         android:paddingTop="10pt">
         <requestFocus />
     </EditText>
+    <EditText
+        android:id="@+id/plate_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:maxLength="100"
+        android:hint="Plate Item"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_tab_unselected"
+        android:inputType="text"
+        android:text=""
+        android:paddingTop="10pt">
+    </EditText>
 
     <EditText
         android:id="@+id/plate_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_pwd"
-        android:drawableStart="@drawable/ic_pwd"
         android:ems="10"
         android:maxLength="200"
         android:textColor="@color/black"
@@ -42,8 +52,6 @@
             android:id="@+id/plate_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_pwd"
-            android:drawableStart="@drawable/ic_pwd"
             android:ems="10"
             android:layout_weight="2"
             android:textColor="@color/black"
@@ -57,6 +65,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_tab_unselected"
         android:prompt="@string/symbol"
         />
     </LinearLayout>
@@ -64,8 +74,6 @@
         android:id="@+id/plate_cookingtime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_pwd"
-        android:drawableStart="@drawable/ic_pwd"
         android:ems="10"
         android:maxLength="200"
         android:textColor="@color/black"
@@ -78,8 +86,10 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
+        android:layout_marginTop="10dp"
         android:text="@string/dishtype"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_tab_unselected"
         android:layout_margin="5dp"
         />
 
@@ -89,18 +99,22 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:prompt="@string/dishtype"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_tab_unselected"
         />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="UploadImage"
+        android:id="@+id/upload_image"
         android:layout_margin="5dp"
+        android:background="@color/active_color"
         android:text="Upload Image"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="sendPlateData"
+        android:id="@+id/create_plate"
         android:layout_margin="5dp"
+        android:background="@color/active_color"
         android:text="Create/Edit"/>
 </LinearLayout>
