@@ -49,8 +49,9 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:id="@+id/cross"
+            android:layout_marginRight="3dp"
             android:layout_alignTop="@+id/title"
-            android:background="@drawable/ic_launcher"
+            android:background="@drawable/ic_action_highlight_remove"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 
