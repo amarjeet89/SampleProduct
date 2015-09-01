@@ -100,7 +100,7 @@ public class SampleActivity extends Activity {
     }
     
     private PayPalPayment getThingToBuy(String paymentIntent) {
-        return new PayPalPayment(new BigDecimal("1.75"), "USD", "sample item",
+        return new PayPalPayment(new BigDecimal("300.0"), "USD", "sample item",
                 paymentIntent);
     }
     
