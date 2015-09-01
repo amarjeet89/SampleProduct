@@ -58,52 +58,118 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private ArrayList<String> imageList;
     private ArrayList<String> contactList;
     private ProgressDialog loadingProgress;
+    BaseSync.OnTaskCompleted updateListener = new BaseSync.OnTaskCompleted() {
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.activity_user_edit, null);
-        initializeControls(view);
-        return view;
-    }
+        @Override
+        public void onTaskCompleted(final String str) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        JSONObject obj = new JSONObject(str);
+                        loadingProgress.cancel();
+                        if (obj.getString("status").equals("success")) {
+                            Toast.makeText(getActivity(), "Updated Successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                        }
 
-    private void initializeControls(View view) {
-        imageList = new ArrayList<>();
-        contactList = new ArrayList<>();
-        name = (TextView) view.findViewById(R.id.name);
-        mobileNo = (TextView) view.findViewById(R.id.mobile);
-        area = (TextView) view.findViewById(R.id.area);
-        city = (TextView) view.findViewById(R.id.city);
-        address = (TextView) view.findViewById(R.id.address);
-        state = (TextView) view.findViewById(R.id.state);
-        pincode = (TextView) view.findViewById(R.id.pincode);
-        aboutMe = (TextView) view.findViewById(R.id.about_me_text);
-        pickImage = (Button) view.findViewById(R.id.pick_img);
-        save = (Button) view.findViewById(R.id.save);
-        save.setOnClickListener(this);
-        pickImage.setOnClickListener(this);
-        loadingProgress = new ProgressDialog(getActivity(),
-                ProgressDialog.THEME_HOLO_LIGHT);
-        loadingProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        loadingProgress.setTitle(getResources().getString(R.string.app_name));
-        loadingProgress.setMessage("Loading..");
-        getProfileData();
-        fragmentManager = getActivity().getFragmentManager();
+                    } catch (JSONException e) {
+                        loadingProgress.cancel();
+                        e.printStackTrace();
+                    }
 
-    }
+                }
+            });
+        }
 
-    private void getProfileData() {
-        /*String profileURL = getString(R.string.base_url)+getString(R.string.user_url)+
-                ProductPreferences.getInstance(getActivity()).getUserId()+"?"+getString(R.string.token_Url)+
-                ProductPreferences.getInstance(getActivity()).getAccessToken();*/
+        @Override
+        public void onTaskFailure(final String str) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
-        String profileURL = getString(R.string.base_url) + getString(R.string.seller_url_param) + "?"
-                + getString(R.string.token_Url) + ProductPreferences.getInstance(getActivity()).getAccessToken()
-                + "&uid=" + ProductPreferences.getInstance(getActivity()).getUserId();
+    };
+    BaseSync.OnTaskCompleted addSelllerListener = new BaseSync.OnTaskCompleted() {
 
-        new BaseSync(redrawListener, profileURL, null, CommonUtil.HTTP_GET).execute();
-    }
+        @Override
+        public void onTaskCompleted(final String str) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        loadingProgress.cancel();
+                        JSONObject obj = new JSONObject(str);
+                        if (obj.getString("status").equals("success")) {
+                            Toast.makeText(getActivity(), "Added Successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                        }
 
+                    } catch (JSONException e) {
+                        loadingProgress.cancel();
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+        @Override
+        public void onTaskFailure(final String str) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    };
+    BaseSync.OnTaskCompleted imageUploadListener = new BaseSync.OnTaskCompleted() {
+
+        @Override
+        public void onTaskCompleted(final String str) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        loadingProgress.cancel();
+                        JSONObject obj = new JSONObject(str);
+                        if (obj.getString("status").equals("success")) {
+                            JSONObject data = obj.getJSONObject("data");
+                            imageList.add(data.getJSONArray("image").getString(0));
+                            Toast.makeText(getActivity(), "Image uploaded successful", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+        @Override
+        public void onTaskFailure(final String str) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    };
     private boolean update = false;
     BaseSync.OnTaskCompleted redrawListener = new BaseSync.OnTaskCompleted() {
 
@@ -120,6 +186,8 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                                 update = true;
                                 String sellerId = sellerObject.getString("_id");
                                 ProductPreferences.getInstance(getActivity()).setSellerId(sellerId);
+                                String sellerUserId = sellerObject.getString("user_id");
+                                ProductPreferences.getInstance(getActivity()).setSellerUserId(sellerUserId);
                                 String title = sellerObject.getString("title");
                                 JSONArray itemPics = sellerObject.getJSONArray("item_pics");
                                 //JSONArray contacts = sellerObject.getJSONArray("contacts");
@@ -177,6 +245,51 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         }
 
     };
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.activity_user_edit, null);
+        initializeControls(view);
+        return view;
+    }
+
+    private void initializeControls(View view) {
+        imageList = new ArrayList<>();
+        contactList = new ArrayList<>();
+        name = (TextView) view.findViewById(R.id.name);
+        mobileNo = (TextView) view.findViewById(R.id.mobile);
+        area = (TextView) view.findViewById(R.id.area);
+        city = (TextView) view.findViewById(R.id.city);
+        address = (TextView) view.findViewById(R.id.address);
+        state = (TextView) view.findViewById(R.id.state);
+        pincode = (TextView) view.findViewById(R.id.pincode);
+        aboutMe = (TextView) view.findViewById(R.id.about_me_text);
+        pickImage = (Button) view.findViewById(R.id.pick_img);
+        save = (Button) view.findViewById(R.id.save);
+        save.setOnClickListener(this);
+        pickImage.setOnClickListener(this);
+        loadingProgress = new ProgressDialog(getActivity(),
+                ProgressDialog.THEME_HOLO_LIGHT);
+        loadingProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        loadingProgress.setTitle(getResources().getString(R.string.app_name));
+        loadingProgress.setMessage("Loading..");
+        getProfileData();
+        fragmentManager = getActivity().getFragmentManager();
+
+    }
+
+    private void getProfileData() {
+        /*String profileURL = getString(R.string.base_url)+getString(R.string.user_url)+
+                ProductPreferences.getInstance(getActivity()).getUserId()+"?"+getString(R.string.token_Url)+
+                ProductPreferences.getInstance(getActivity()).getAccessToken();*/
+
+        String profileURL = getString(R.string.base_url) + getString(R.string.seller_url_param) + "?"
+                + getString(R.string.token_Url) + ProductPreferences.getInstance(getActivity()).getAccessToken()
+                + "&uid=" + ProductPreferences.getInstance(getActivity()).getUserId();
+
+        new BaseSync(redrawListener, profileURL, null, CommonUtil.HTTP_GET).execute();
+    }
 
     @Override
     public void onClick(View v) {
@@ -281,82 +394,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
     }
 
-    BaseSync.OnTaskCompleted updateListener = new BaseSync.OnTaskCompleted() {
-
-        @Override
-        public void onTaskCompleted(final String str) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        JSONObject obj = new JSONObject(str);
-                        loadingProgress.cancel();
-                        if (obj.getString("status").equals("success")) {
-                            Toast.makeText(getActivity(), "Updated Successfully", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity(), obj.getString("status"), Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (JSONException e) {
-                        loadingProgress.cancel();
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        }
-
-        @Override
-        public void onTaskFailure(final String str) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    };
-
-    BaseSync.OnTaskCompleted addSelllerListener = new BaseSync.OnTaskCompleted() {
-
-        @Override
-        public void onTaskCompleted(final String str) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        loadingProgress.cancel();
-                        JSONObject obj = new JSONObject(str);
-                        if (obj.getString("status").equals("success")) {
-                            Toast.makeText(getActivity(), "Added Successfully", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity(), obj.getString("status"), Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (JSONException e) {
-                        loadingProgress.cancel();
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        }
-
-        @Override
-        public void onTaskFailure(final String str) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    };
-
     @Override
     public void gallary() {
         System.out.println("Gallary");
@@ -435,43 +472,4 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             e.printStackTrace();
         }
     }
-
-    BaseSync.OnTaskCompleted imageUploadListener = new BaseSync.OnTaskCompleted() {
-
-        @Override
-        public void onTaskCompleted(final String str) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        loadingProgress.cancel();
-                        JSONObject obj = new JSONObject(str);
-                        if (obj.getString("status").equals("success")) {
-                            JSONObject data = obj.getJSONObject("data");
-                            imageList.add(data.getJSONArray("image").getString(0));
-                            Toast.makeText(getActivity(), "Image uploaded successful", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity(), obj.getString("status"), Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        }
-
-        @Override
-        public void onTaskFailure(final String str) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    };
 }

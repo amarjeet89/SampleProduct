@@ -1,6 +1,5 @@
 package com.prafull.product.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -26,9 +25,50 @@ import java.util.ArrayList;
 
 public class PlateListActivity extends AppCompatActivity{
 
+    ListView plateListView;
     private ProgressDialog loadingProgress;
     private ArrayList<PlateItem> plateData;
-    ListView plateListView;
+    BaseSync.OnTaskCompleted plateLoadListener = new BaseSync.OnTaskCompleted() {
+
+        @Override
+        public void onTaskCompleted(final String str) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    try {
+                        JSONObject obj = new JSONObject(str);
+                        System.out.println(obj);
+                        if (obj.getString("status").equals("success")) {
+                            plateData = parsePlateData(obj);
+                            PlateListViewAdapter productDataAdapter = new PlateListViewAdapter(getApplicationContext(), plateData);
+                            if (plateListView != null)
+                                plateListView.setAdapter(productDataAdapter);
+                        } else {
+                            Toast.makeText(getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+
+        @Override
+        public void onTaskFailure(final String str) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +81,7 @@ public class PlateListActivity extends AppCompatActivity{
 
     private void loadPlateList() {
         String token = ProductPreferences.getInstance(getApplicationContext()).getAccessToken();
-        String sellerId = ProductPreferences.getInstance(getApplicationContext()).getSellerId();
+        String sellerId = ProductPreferences.getInstance(getApplicationContext()).getSellerUserId();
         String sellerListUrl = getString(R.string.base_url) + getString(R.string.get_plate_list_url) + "?token=" + token+"&seller_user_id="+sellerId;
         System.out.println("sellerListUrl : " + sellerListUrl);
         loadingProgress = new ProgressDialog(PlateListActivity.this,
@@ -76,51 +116,6 @@ public class PlateListActivity extends AppCompatActivity{
 
         return super.onOptionsItemSelected(item);
     }
-
-
-    BaseSync.OnTaskCompleted plateLoadListener = new BaseSync.OnTaskCompleted() {
-
-        @Override
-        public void onTaskCompleted(final String str) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    try {
-                        JSONObject obj = new JSONObject(str);
-                        System.out.println(obj);
-                        if (obj.getString("status").equals("success")) {
-                            plateData = parsePlateData(obj);
-                            PlateListViewAdapter productDataAdapter=new PlateListViewAdapter(getApplicationContext(),plateData);
-                            if(plateListView!=null)
-                                plateListView.setAdapter(productDataAdapter);
-                        }
-                        else {
-                            Toast.makeText(getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        }
-
-
-        @Override
-        public void onTaskFailure(final String str) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    };
-
 
     private ArrayList<PlateItem> parsePlateData(JSONObject obj) {
         ArrayList<PlateItem> plateDataArray = null;

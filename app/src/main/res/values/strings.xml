@@ -37,7 +37,7 @@
     <string name="drawer_close">Menu Close</string>
     <string name="from_galary">From Gallary</string>
     <string name="to_take_pic">Take A Picture</string>
-    <string name="title_activity_plate_list">PlateListActivity</string>
+    <string name="title_activity_plate_list">Plate List </string>
     <string name="title_activity_custom_plate">Custom Plate</string>
     <string name="create_plate">Create New Plate</string>
     <string name="symbol">type</string>
