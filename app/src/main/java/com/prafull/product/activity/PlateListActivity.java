@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,7 +25,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class PlateListActivity extends AppCompatActivity{
+public class PlateListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView plateListView;
     private ProgressDialog loadingProgress;
@@ -76,6 +78,7 @@ public class PlateListActivity extends AppCompatActivity{
         setContentView(R.layout.activity_plate_list);
        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_color)));
         plateListView=(ListView)findViewById(R.id.plate_list_view);
+        plateListView.setOnItemClickListener(this);
         loadPlateList();
     }
 
@@ -145,4 +148,14 @@ public class PlateListActivity extends AppCompatActivity{
         return plateDataArray;
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+        PlateItem plateItem = plateData.get(i);
+        Intent intent = new Intent(PlateListActivity.this, CustomPlate.class);
+        intent.putExtra("plateId", plateItem.getUserId());
+        startActivity(intent);
+
+
+    }
 }
