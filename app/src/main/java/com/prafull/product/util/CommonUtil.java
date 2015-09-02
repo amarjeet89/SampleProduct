@@ -17,4 +17,6 @@ public class CommonUtil {
     public static final String IMAGE_DIRECTORY_NAME = "product";
     public static final String SELLER_DETAILS = "Seller_details";
     public static final String CONFIRM_ORDER = "confirm_order";
+    public static final String EDIT_PLATE_FLAG = "editPlateFlag";
+    public static final String PLATE_ID = "plateID";
 }

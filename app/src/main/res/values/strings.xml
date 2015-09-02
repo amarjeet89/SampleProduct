@@ -63,5 +63,6 @@
     <string name="set_address">Proceed</string>
     <string name="enter_location">Enter Location</string>
     <string name="action_order">Order</string>
+    <string name="update_plate">Update Plate</string>
 
 </resources>

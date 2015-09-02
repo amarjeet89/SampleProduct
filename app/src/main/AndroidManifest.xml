@@ -79,10 +79,6 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.PlateListActivity"
-            android:label="@string/title_activity_plate_list" >
-        </activity>
-        <activity
             android:name=".activity.CustomPlate"
             android:label="@string/title_activity_custom_plate" >
         </activity>

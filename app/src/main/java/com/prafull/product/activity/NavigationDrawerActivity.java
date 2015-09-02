@@ -26,6 +26,7 @@ import android.graphics.drawable.ColorDrawable;
 import com.prafull.product.R;
 import com.prafull.product.adapter.NavigationDrawerAdapter;
 import com.prafull.product.fragments.EditProfileFragment;
+import com.prafull.product.fragments.PlateListFragment;
 import com.prafull.product.fragments.ProductFragment;
 import com.prafull.product.pojo.NavigationMenu;
 
@@ -108,8 +109,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                         fragment = new EditProfileFragment();
                         break;
                     case 3:
-                        //fragment = new EditProfileFragment();
-                        startActivity(new Intent(NavigationDrawerActivity.this,PlateListActivity.class));
+                        fragment = new PlateListFragment();
+                      //  startActivity(new Intent(NavigationDrawerActivity.this,PlateListActivity.class));
+
                         break;
                     case 5:
                         //fragment = new EditProfileFragment();

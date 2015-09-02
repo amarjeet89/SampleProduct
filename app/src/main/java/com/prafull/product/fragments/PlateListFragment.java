@@ -1,20 +1,35 @@
-package com.prafull.product.activity;
+package com.prafull.product.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.prafull.product.R;
+import com.prafull.product.activity.CustomPlate;
+import com.prafull.product.activity.ProductDetailsActivity;
 import com.prafull.product.adapter.PlateListViewAdapter;
+import com.prafull.product.adapter.ProductListAdapter;
 import com.prafull.product.pojo.PlateItem;
+import com.prafull.product.pojo.Product;
+import com.prafull.product.pojo.ProductImage;
+import com.prafull.product.pulltorefresh.IonRefreshListener;
+import com.prafull.product.pulltorefresh.PullToUpdateListView;
 import com.prafull.product.services.BaseSync;
 import com.prafull.product.util.CommonUtil;
 import com.prafull.product.util.ProductPreferences;
@@ -25,16 +40,48 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class PlateListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+/**
+ * Created by SHUBHANSU on 8/2/2015.
+ */
 
-    ListView plateListView;
+public class PlateListFragment extends Fragment implements AdapterView.OnItemClickListener {
     private ProgressDialog loadingProgress;
+    private ListView plateListView;
     private ArrayList<PlateItem> plateData;
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
+        View view = inflater.inflate(R.layout.activity_plate_list, null);
+        setHasOptionsMenu(true);
+        plateListView=(ListView)view.findViewById(R.id.plate_list_view);
+        plateListView.setOnItemClickListener(this);
+        loadPlateList();
+        return view;
+    }
+
+    private void loadPlateList() {
+        String token = ProductPreferences.getInstance(getActivity().getApplicationContext()).getAccessToken();
+        String sellerId = ProductPreferences.getInstance(getActivity().getApplicationContext()).getUserId();
+        String sellerListUrl = getString(R.string.base_url) + getString(R.string.get_plate_list_url) + "?token=" + token+"&seller_user_id="+sellerId;
+        System.out.println("sellerListUrl : " + sellerListUrl);
+        loadingProgress = new ProgressDialog(getActivity(),
+                ProgressDialog.THEME_HOLO_LIGHT);
+        loadingProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        loadingProgress.setTitle(getResources().getString(R.string.app_name));
+        loadingProgress.setMessage("Loading..");
+        loadingProgress.show();
+        new BaseSync(plateLoadListener, sellerListUrl, null, CommonUtil.HTTP_GET).execute();
+
+    }
+
     BaseSync.OnTaskCompleted plateLoadListener = new BaseSync.OnTaskCompleted() {
 
         @Override
         public void onTaskCompleted(final String str) {
-            runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     loadingProgress.cancel();
@@ -43,11 +90,11 @@ public class PlateListActivity extends AppCompatActivity implements AdapterView.
                         System.out.println(obj);
                         if (obj.getString("status").equals("success")) {
                             plateData = parsePlateData(obj);
-                            PlateListViewAdapter productDataAdapter = new PlateListViewAdapter(getApplicationContext(), plateData);
+                            PlateListViewAdapter productDataAdapter = new PlateListViewAdapter(getActivity().getApplicationContext(), plateData);
                             if (plateListView != null)
                                 plateListView.setAdapter(productDataAdapter);
                         } else {
-                            Toast.makeText(getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity().getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
                         }
 
                     } catch (JSONException e) {
@@ -61,11 +108,11 @@ public class PlateListActivity extends AppCompatActivity implements AdapterView.
 
         @Override
         public void onTaskFailure(final String str) {
-            runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     loadingProgress.cancel();
-                    Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), str, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -73,52 +120,25 @@ public class PlateListActivity extends AppCompatActivity implements AdapterView.
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_plate_list);
-       getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_color)));
-        plateListView=(ListView)findViewById(R.id.plate_list_view);
-        plateListView.setOnItemClickListener(this);
-        loadPlateList();
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.menu_plate_list, menu);
     }
 
-    private void loadPlateList() {
-        String token = ProductPreferences.getInstance(getApplicationContext()).getAccessToken();
-        String sellerId = ProductPreferences.getInstance(getApplicationContext()).getSellerUserId();
-        String sellerListUrl = getString(R.string.base_url) + getString(R.string.get_plate_list_url) + "?token=" + token+"&seller_user_id="+sellerId;
-        System.out.println("sellerListUrl : " + sellerListUrl);
-        loadingProgress = new ProgressDialog(PlateListActivity.this,
-                ProgressDialog.THEME_HOLO_LIGHT);
-        loadingProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        loadingProgress.setTitle(getResources().getString(R.string.app_name));
-        loadingProgress.setMessage("Loading..");
-        loadingProgress.show();
-        new BaseSync(plateLoadListener, sellerListUrl, null, CommonUtil.HTTP_GET).execute();
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_plate_list, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement//
         if (id == R.id.add) {
-            startActivity(new Intent(PlateListActivity.this,CustomPlate.class));
+            startActivity(new Intent(getActivity(),CustomPlate.class));
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     private ArrayList<PlateItem> parsePlateData(JSONObject obj) {
         ArrayList<PlateItem> plateDataArray = null;
@@ -135,7 +155,7 @@ public class PlateListActivity extends AppCompatActivity implements AdapterView.
                                 itemData.getString("currency"),itemData.getString("_id"),itemData.getString("description"),
                                 itemData.getString("dish_type"),itemData.getString("user_id"),itemData.getInt("quantity"),
                                 itemData.getInt("price"),itemData.getString("rating"),itemData.getJSONArray("item_pics")
-                                ));
+                        ));
                     }
 
                 }
@@ -151,9 +171,11 @@ public class PlateListActivity extends AppCompatActivity implements AdapterView.
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+        Toast.makeText(getActivity().getApplicationContext(),"position : "+i,Toast.LENGTH_SHORT).show();
         PlateItem plateItem = plateData.get(i);
-        Intent intent = new Intent(PlateListActivity.this, CustomPlate.class);
-        intent.putExtra("plateId", plateItem.getUserId());
+        Intent intent = new Intent(getActivity(), CustomPlate.class);
+        intent.putExtra(CommonUtil.PLATE_ID, plateItem.getUserId());
+        intent.putExtra(CommonUtil.EDIT_PLATE_FLAG, true);
         startActivity(intent);
 
 
