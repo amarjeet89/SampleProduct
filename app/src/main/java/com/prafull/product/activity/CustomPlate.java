@@ -53,14 +53,148 @@ public class CustomPlate extends AppCompatActivity implements View.OnClickListen
     private String[] mPrices;
     private String[] mDishes;
     private ProgressDialog loadingProgress;
+    BaseSync.OnTaskCompleted getPlateListener = new BaseSync.OnTaskCompleted() {
 
+        @Override
+        public void onTaskCompleted(final String str) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    try {
+                        JSONObject obj = new JSONObject(str);
+                        System.out.println(obj);
+                        if (obj.getString("status").equals("success")) {
+                            if (obj.has("data")) {
+                                JSONObject dataObj = obj.getJSONObject("data");
+                                if (dataObj.has("data")) {
+                                    JSONObject plateData = dataObj.getJSONObject("data");
+                                    mTitle.setText(plateData.getString("title"));
+                                    mTitle.setFocusableInTouchMode(false);
+                                    mTitle.setFocusable(false);
+                                    mDesc.setText(plateData.getString("description"));
+                                    mPrice.setText(plateData.getString("price"));
+                                    mCooktime.setText(plateData.getString("cooking_time"));
+                                    // plate_item.setText();
+
+                                    for (int i = 0; i < price_spinner.getCount(); i++) {
+                                        if (price_spinner.getItemAtPosition(i).equals(plateData.getString("currency"))) {
+                                            price_spinner.setSelection(i);
+                                        }
+                                    }
+                                    for (int i = 0; i < dish_spinner.getCount(); i++) {
+                                        if (dish_spinner.getItemAtPosition(i).equals(plateData.getString("dish_type"))) {
+                                            dish_spinner.setSelection(i);
+                                        }
+                                    }
+                                }
+                            }
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), obj.getString("error_msg"), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+        @Override
+        public void onTaskFailure(final String str) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    };
+    BaseSync.OnTaskCompleted addPlateListener = new BaseSync.OnTaskCompleted() {
+
+        @Override
+        public void onTaskCompleted(final String str) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    try {
+                        JSONObject obj = new JSONObject(str);
+                        System.out.println(obj);
+                        if (obj.getString("status").equals("success")) {
+                            Toast.makeText(getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), obj.getString("status") + obj.getString("error_msg"), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+        @Override
+        public void onTaskFailure(final String str) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    };
     private ImagePickerFragmentForPlate imagePicker;
     private FragmentManager fragmentManager;
     private Uri imageUri;
     private String mSelectImgPath,plateID;
     private ArrayList<Object> imageList;
-    private Boolean editFlag;
+    BaseSync.OnTaskCompleted imageUploadListener = new BaseSync.OnTaskCompleted() {
 
+        @Override
+        public void onTaskCompleted(final String str) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        loadingProgress.cancel();
+                        JSONObject obj = new JSONObject(str);
+                        if (obj.getString("status").equals("success")) {
+                            JSONObject data = obj.getJSONObject("data");
+                            imageList.add(data.getJSONArray("image").getString(0));
+                            Toast.makeText(getApplicationContext(), "Image uploaded successful", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+        @Override
+        public void onTaskFailure(final String str) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    };
+    private Boolean editFlag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,129 +247,27 @@ public class CustomPlate extends AppCompatActivity implements View.OnClickListen
 
             }
         });
-
-        if(getIntent().hasExtra(CommonUtil.EDIT_PLATE_FLAG)){
-            editFlag=true;
-            plateID=getIntent().getStringExtra(CommonUtil.PLATE_ID);
-            String plateUrl=getString(R.string.base_url) + getString(R.string.Create_Plate_Url)+"/"+plateID+
-                    "?token="+ProductPreferences.getInstance(getApplicationContext()).getAccessToken();
-            loadingProgress.show();
-            new BaseSync(getPlateListener, plateUrl, null, CommonUtil.HTTP_GET).execute();
-            create_plate.setText(getString(R.string.update_plate));
-        }else{
-            editFlag=false;
-            create_plate.setText(getString(R.string.create_plate));
-        }
-
         loadingProgress = new ProgressDialog(CustomPlate.this,
                 ProgressDialog.THEME_HOLO_LIGHT);
         loadingProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         loadingProgress.setTitle(getResources().getString(R.string.app_name));
         loadingProgress.setMessage("Loading..");
+
+        if (getIntent().hasExtra(CommonUtil.EDIT_PLATE_FLAG)) {
+            editFlag = true;
+            plateID = getIntent().getStringExtra(CommonUtil.PLATE_ID);
+            String plateUrl = getString(R.string.base_url) + getString(R.string.Create_Plate_Url) + "/" + plateID +
+                    "?token=" + ProductPreferences.getInstance(getApplicationContext()).getAccessToken();
+            loadingProgress.show();
+            new BaseSync(getPlateListener, plateUrl, null, CommonUtil.HTTP_GET).execute();
+            create_plate.setText(getString(R.string.update_plate));
+        } else {
+            editFlag = false;
+            create_plate.setText(getString(R.string.create_plate));
+        }
+
+
     }
-
-
-
-    BaseSync.OnTaskCompleted getPlateListener = new BaseSync.OnTaskCompleted() {
-
-        @Override
-        public void onTaskCompleted(final String str) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    try {
-                        JSONObject obj = new JSONObject(str);
-                        System.out.println(obj);
-                        if (obj.getString("status").equals("success")) {
-                            if (obj.has("data")) {
-                                JSONObject dataObj = obj.getJSONObject("data");
-                                if (dataObj.has("data")) {
-                                    JSONObject plateData = dataObj.getJSONObject("data");
-                                    mTitle.setText(plateData.getString("title"));
-                                    mTitle.setFocusableInTouchMode(false);
-                                    mTitle.setFocusable(false);
-                                    mDesc.setText(plateData.getString("description"));
-                                    mPrice.setText(plateData.getString("price"));
-                                    mCooktime.setText(plateData.getString("cooking_time"));
-                                   // plate_item.setText();
-
-                                    for (int i=0;i<price_spinner.getCount();i++){
-                                        if (price_spinner.getItemAtPosition(i).equals(plateData.getString("currency"))){
-                                            price_spinner.setSelection(i);
-                                        }
-                                    }
-                                    for (int i=0;i<dish_spinner.getCount();i++){
-                                        if (dish_spinner.getItemAtPosition(i).equals(plateData.getString("dish_type"))){
-                                            dish_spinner.setSelection(i);
-                                        }
-                                    }
-                                }
-                            }
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), obj.getString("error_msg"), Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        }
-
-        @Override
-        public void onTaskFailure(final String str) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    };
-
-
-    BaseSync.OnTaskCompleted addPlateListener = new BaseSync.OnTaskCompleted() {
-
-        @Override
-        public void onTaskCompleted(final String str) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    try {
-                        JSONObject obj = new JSONObject(str);
-                        System.out.println(obj);
-                        if (obj.getString("status").equals("success")) {
-                            Toast.makeText(getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), obj.getString("status") + obj.getString("error_msg"), Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        }
-
-        @Override
-        public void onTaskFailure(final String str) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    };
 
     private void sendPlateData() {
         if (!mTitle.getText().toString().isEmpty() && !mDesc.getText().toString().isEmpty() && !mPrice.getText().toString().isEmpty()
@@ -375,45 +407,5 @@ public class CustomPlate extends AppCompatActivity implements View.OnClickListen
             e.printStackTrace();
         }
     }
-
-
-    BaseSync.OnTaskCompleted imageUploadListener = new BaseSync.OnTaskCompleted() {
-
-        @Override
-        public void onTaskCompleted(final String str) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        loadingProgress.cancel();
-                        JSONObject obj = new JSONObject(str);
-                        if (obj.getString("status").equals("success")) {
-                            JSONObject data = obj.getJSONObject("data");
-                            imageList.add(data.getJSONArray("image").getString(0));
-                            Toast.makeText(getApplicationContext(), "Image uploaded successful", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        }
-
-        @Override
-        public void onTaskFailure(final String str) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    };
 
 }

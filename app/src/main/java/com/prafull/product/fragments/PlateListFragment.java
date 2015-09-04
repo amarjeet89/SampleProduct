@@ -67,6 +67,11 @@ public class PlateListFragment extends Fragment {
                         public void onItemClick(AdapterView<?> adapterView, View view1, int i, long l) {
                             System.out.println("item clicked");
                             Toast.makeText(getActivity().getApplicationContext(), "position : " + i, Toast.LENGTH_SHORT).show();
+                            PlateItem plateItem = plateData.get(i);
+                            Intent intent = new Intent(getActivity(), CustomPlate.class);
+                            intent.putExtra(CommonUtil.PLATE_ID, plateItem.getUserId());
+                            intent.putExtra(CommonUtil.EDIT_PLATE_FLAG, true);
+                            startActivity(intent);
                         }
                     });
                 }
@@ -92,7 +97,7 @@ public class PlateListFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.activity_plate_list, null);
         setHasOptionsMenu(true);
-        plateListView=(ListView)view.findViewById(R.id.plate_list_view);
+        plateListView = (ListView) view.findViewById(R.id.plate_list_view);
         loadPlateList();
         return view;
     }
@@ -100,7 +105,7 @@ public class PlateListFragment extends Fragment {
     private void loadPlateList() {
         String token = ProductPreferences.getInstance(getActivity().getApplicationContext()).getAccessToken();
         String sellerId = ProductPreferences.getInstance(getActivity().getApplicationContext()).getUserId();
-        String sellerListUrl = getString(R.string.base_url) + getString(R.string.get_plate_list_url) + "?token=" + token+"&seller_user_id="+sellerId;
+        String sellerListUrl = getString(R.string.base_url) + getString(R.string.get_plate_list_url) + "?token=" + token + "&seller_user_id=" + sellerId;
         System.out.println("sellerListUrl : " + sellerListUrl);
         loadingProgress = new ProgressDialog(getActivity(),
                 ProgressDialog.THEME_HOLO_LIGHT);
@@ -122,13 +127,12 @@ public class PlateListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.add) {
-            startActivity(new Intent(getActivity(),CustomPlate.class));
+            startActivity(new Intent(getActivity(), CustomPlate.class));
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
     private ArrayList<PlateItem> parsePlateData(JSONObject obj) {
@@ -143,9 +147,9 @@ public class PlateListFragment extends Fragment {
                         JSONObject itemData = dataArray.getJSONObject(i);
 
                         plateDataArray.add(new PlateItem(itemData.getString("title"), itemData.getString("cooking_time"),
-                                itemData.getString("currency"),itemData.getString("_id"),itemData.getString("description"),
-                                itemData.getString("dish_type"),itemData.getString("user_id"),itemData.getInt("quantity"),
-                                itemData.getInt("price"),itemData.getString("rating"),itemData.getJSONArray("item_pics")
+                                itemData.getString("currency"), itemData.getString("_id"), itemData.getString("description"),
+                                itemData.getString("dish_type"), itemData.getString("user_id"), itemData.getInt("quantity"),
+                                itemData.getInt("price"), itemData.getString("rating"), itemData.getJSONArray("item_pics")
                         ));
                     }
 
