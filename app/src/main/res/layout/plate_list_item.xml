@@ -2,8 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:clickable="false"
+    android:descendantFocusability="blocksDescendants"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:gravity="center_vertical">
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/plate_networkImageView"
@@ -31,18 +34,18 @@
                 android:id="@+id/plate_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/material_blue_grey_800"
-                android:padding="5dp"
-                android:inputType="textCapSentences"
                 android:layout_weight="2.5"
+                android:inputType="textCapSentences"
+                android:padding="5dp"
+                android:textColor="@color/material_blue_grey_800"
                 android:textSize="16sp" />
             <TextView
                 android:id="@+id/plate_price"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5"
-                android:textColor="@color/material_blue_grey_800"
                 android:padding="5dp"
+                android:textColor="@color/material_blue_grey_800"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -51,12 +54,12 @@
             android:id="@+id/plate_cooking_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="14sp"
-            android:maxLines="1"
-            android:maxLength="75"
             android:ellipsize="end"
-            android:padding="5dp"/>
+            android:maxLength="75"
+            android:maxLines="1"
+            android:padding="5dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp" />
     </LinearLayout>
   <ImageView
       android:id="@+id/plate_edit_btn"

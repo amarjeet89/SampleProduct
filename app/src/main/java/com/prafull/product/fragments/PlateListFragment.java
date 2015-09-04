@@ -2,34 +2,23 @@ package com.prafull.product.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.prafull.product.R;
 import com.prafull.product.activity.CustomPlate;
-import com.prafull.product.activity.ProductDetailsActivity;
 import com.prafull.product.adapter.PlateListViewAdapter;
-import com.prafull.product.adapter.ProductListAdapter;
 import com.prafull.product.pojo.PlateItem;
-import com.prafull.product.pojo.Product;
-import com.prafull.product.pojo.ProductImage;
-import com.prafull.product.pulltorefresh.IonRefreshListener;
-import com.prafull.product.pulltorefresh.PullToUpdateListView;
 import com.prafull.product.services.BaseSync;
 import com.prafull.product.util.CommonUtil;
 import com.prafull.product.util.ProductPreferences;
@@ -41,42 +30,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by SHUBHANSU on 8/2/2015.
+ * Created by Amarjeet on 8/2/2015.
  */
 
-public class PlateListFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class PlateListFragment extends Fragment {
     private ProgressDialog loadingProgress;
     private ListView plateListView;
     private ArrayList<PlateItem> plateData;
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-
-        View view = inflater.inflate(R.layout.activity_plate_list, null);
-        setHasOptionsMenu(true);
-        plateListView=(ListView)view.findViewById(R.id.plate_list_view);
-        plateListView.setOnItemClickListener(this);
-        loadPlateList();
-        return view;
-    }
-
-    private void loadPlateList() {
-        String token = ProductPreferences.getInstance(getActivity().getApplicationContext()).getAccessToken();
-        String sellerId = ProductPreferences.getInstance(getActivity().getApplicationContext()).getUserId();
-        String sellerListUrl = getString(R.string.base_url) + getString(R.string.get_plate_list_url) + "?token=" + token+"&seller_user_id="+sellerId;
-        System.out.println("sellerListUrl : " + sellerListUrl);
-        loadingProgress = new ProgressDialog(getActivity(),
-                ProgressDialog.THEME_HOLO_LIGHT);
-        loadingProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        loadingProgress.setTitle(getResources().getString(R.string.app_name));
-        loadingProgress.setMessage("Loading..");
-        loadingProgress.show();
-        new BaseSync(plateLoadListener, sellerListUrl, null, CommonUtil.HTTP_GET).execute();
-
-    }
-
     BaseSync.OnTaskCompleted plateLoadListener = new BaseSync.OnTaskCompleted() {
 
         @Override
@@ -97,10 +57,18 @@ public class PlateListFragment extends Fragment implements AdapterView.OnItemCli
                             Toast.makeText(getActivity().getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
                         }
 
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
+                    plateListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view1, int i, long l) {
+                            System.out.println("item clicked");
+                            Toast.makeText(getActivity().getApplicationContext(), "position : " + i, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             });
         }
@@ -120,10 +88,33 @@ public class PlateListFragment extends Fragment implements AdapterView.OnItemCli
     };
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.activity_plate_list, null);
+        setHasOptionsMenu(true);
+        plateListView=(ListView)view.findViewById(R.id.plate_list_view);
+        loadPlateList();
+        return view;
+    }
+
+    private void loadPlateList() {
+        String token = ProductPreferences.getInstance(getActivity().getApplicationContext()).getAccessToken();
+        String sellerId = ProductPreferences.getInstance(getActivity().getApplicationContext()).getUserId();
+        String sellerListUrl = getString(R.string.base_url) + getString(R.string.get_plate_list_url) + "?token=" + token+"&seller_user_id="+sellerId;
+        System.out.println("sellerListUrl : " + sellerListUrl);
+        loadingProgress = new ProgressDialog(getActivity(),
+                ProgressDialog.THEME_HOLO_LIGHT);
+        loadingProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        loadingProgress.setTitle(getResources().getString(R.string.app_name));
+        loadingProgress.setMessage("Loading..");
+        loadingProgress.show();
+        new BaseSync(plateLoadListener, sellerListUrl, null, CommonUtil.HTTP_GET).execute();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
         inflater.inflate(R.menu.menu_plate_list, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
 
@@ -169,15 +160,8 @@ public class PlateListFragment extends Fragment implements AdapterView.OnItemCli
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-        Toast.makeText(getActivity().getApplicationContext(),"position : "+i,Toast.LENGTH_SHORT).show();
-        PlateItem plateItem = plateData.get(i);
-        Intent intent = new Intent(getActivity(), CustomPlate.class);
-        intent.putExtra(CommonUtil.PLATE_ID, plateItem.getUserId());
-        intent.putExtra(CommonUtil.EDIT_PLATE_FLAG, true);
-        startActivity(intent);
-
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
     }
 }

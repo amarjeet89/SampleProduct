@@ -54,7 +54,7 @@ public class PlateListViewAdapter extends ArrayAdapter<PlateItem> {
         holder.ctTextView.setText("Cooking time : "+plateData.getCookingTime());
         holder.priceTextView.setText(String.valueOf(plateData.getPrice())+"/-");
         if(context!=null){
-            holder.plateImageView.setImageUrl(plateData.getItemPic(), mImageLoader);
+            //  holder.plateImageView.setImageUrl(plateData.getItemPic(), mImageLoader);
         }
 
         return vi;
