@@ -2,19 +2,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
      android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
     android:layout_gravity="center"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical"
     android:padding="10dp">
 
 <LinearLayout
+    android:id="@+id/contact_info"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:orientation="vertical"
     android:background="@color/white"
-    android:id="@+id/contact_info"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
@@ -22,31 +23,31 @@
         android:text="@string/enter_mobile_no"/>
 
     <EditText
+        android:id="@+id/tv_mobile_no"
+        style="@style/editTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/editTextStyle"
         android:hint="@string/enter_mobile_no"
-        android:inputType="number"
-        android:id="@+id/tv_mobile_no">
+        android:inputType="number">
         <requestFocus/>
     </EditText>
     <Button
+        android:id="@+id/send_otp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/send_otp"
         android:background="@color/active_color"
         android:text="@string/get_otp"/>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/otp_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="vertical"
-        android:id="@+id/otp_info"
         android:background="@color/white"
-        android:visibility="gone"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"
@@ -54,18 +55,19 @@
             android:text="@string/enter_otp"/>
 
         <EditText
+            android:id="@+id/tv_otp"
+            style="@style/editTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enter_otp"
             android:inputType="numberPassword"
-            style="@style/editTextStyle"
-            android:id="@+id/tv_otp">
+            android:maxLength="10">
 
             </EditText>
         <Button
+            android:id="@+id/verify_otp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/verify_otp"
             android:background="@color/active_color"
             android:text="@string/verify_otp"/>
 

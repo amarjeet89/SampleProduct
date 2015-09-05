@@ -12,6 +12,7 @@
     <string name="Create_Plate_Url">/plate</string>
     <string name="seller_Url">/seller</string>
     <string name="get_plate_list_url">/plate</string>
+    <string name="send_otp_url">/contact_verify</string>
     <string name="sign_up">SIGN UP</string>
     <string name="login">LOGIN</string>
     <string name="title_product_list">Product List</string>
@@ -64,5 +65,9 @@
     <string name="enter_location">Enter Location</string>
     <string name="action_order">Order</string>
     <string name="update_plate">Update Plate</string>
+    <string name="enter_correct_no">Enter 10 digit mobile number</string>
+    <string name="enter_mobile_number">Enter mobile number</string>
+    <string name="sending_otp">Sending OTP</string>
+    <string name="enter_otp_msg">Enter OTP</string>
 
 </resources>
