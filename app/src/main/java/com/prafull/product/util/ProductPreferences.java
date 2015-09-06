@@ -18,6 +18,8 @@ public class ProductPreferences {
     private static final String SELLER_USER_ID = "seller_user_id";
     private static final String OTP_STATUS = "otp";
     private static final String PREF_NAME = "product_preferences";
+    private static final String CURRENT_LATITUDE = "current_latitude";
+    private static final String CURRENT_LONGITUDE = "current_longitude";
     private static ProductPreferences instance;
     SharedPreferences pref;
     Editor editor;
@@ -103,6 +105,24 @@ public class ProductPreferences {
 
     public void setSellerId(String sellerId) {
         editor.putString(SELLER_ID, sellerId);
+        editor.commit();
+    }
+
+    public Long getCurrentLatitude() {
+        return pref.getLong(CURRENT_LATITUDE, 0L);
+    }
+
+    public void setCurrentLatitude(Long lat) {
+        editor.putLong(CURRENT_LATITUDE, lat);
+        editor.commit();
+    }
+
+    public Long getCurrentLongitude() {
+        return pref.getLong(CURRENT_LONGITUDE, 0L);
+    }
+
+    public void setCurrentLongitude(Long lat) {
+        editor.putLong(CURRENT_LONGITUDE, lat);
         editor.commit();
     }
 }

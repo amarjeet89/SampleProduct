@@ -69,7 +69,7 @@ public class PlateListFragment extends Fragment {
                             Toast.makeText(getActivity().getApplicationContext(), "position : " + i, Toast.LENGTH_SHORT).show();
                             PlateItem plateItem = plateData.get(i);
                             Intent intent = new Intent(getActivity(), CustomPlate.class);
-                            intent.putExtra(CommonUtil.PLATE_ID, plateItem.getUserId());
+                            intent.putExtra(CommonUtil.PLATE_ID, plateItem.getId());
                             intent.putExtra(CommonUtil.EDIT_PLATE_FLAG, true);
                             startActivity(intent);
                         }

@@ -75,8 +75,9 @@ public class CustomPlate extends AppCompatActivity implements View.OnClickListen
                                     mDesc.setText(plateData.getString("description"));
                                     mPrice.setText(plateData.getString("price"));
                                     mCooktime.setText(plateData.getString("cooking_time"));
-                                    // plate_item.setText();
-
+                                    if (plateData.getJSONArray("plate_item").length() > 0) {
+                                        plate_item.setText(plateData.getJSONArray("plate_item").getString(0));
+                                    }
                                     for (int i = 0; i < price_spinner.getCount(); i++) {
                                         if (price_spinner.getItemAtPosition(i).equals(plateData.getString("currency"))) {
                                             price_spinner.setSelection(i);
@@ -128,7 +129,7 @@ public class CustomPlate extends AppCompatActivity implements View.OnClickListen
                         if (obj.getString("status").equals("success")) {
                             Toast.makeText(getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getApplicationContext(), obj.getString("status") + obj.getString("error_msg"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), obj.getString("error_msg"), Toast.LENGTH_SHORT).show();
                         }
 
                     } catch (JSONException e) {
@@ -258,6 +259,7 @@ public class CustomPlate extends AppCompatActivity implements View.OnClickListen
             plateID = getIntent().getStringExtra(CommonUtil.PLATE_ID);
             String plateUrl = getString(R.string.base_url) + getString(R.string.Create_Plate_Url) + "/" + plateID +
                     "?token=" + ProductPreferences.getInstance(getApplicationContext()).getAccessToken();
+            System.out.println("plateUrl : " + plateUrl);
             loadingProgress.show();
             new BaseSync(getPlateListener, plateUrl, null, CommonUtil.HTTP_GET).execute();
             create_plate.setText(getString(R.string.update_plate));
@@ -289,7 +291,9 @@ public class CustomPlate extends AppCompatActivity implements View.OnClickListen
                 }
 
                 obj.put("token", new ProductPreferences(getApplicationContext()).getAccessToken());
-                obj.put("plate_item", plate_item.getText().toString());
+                JSONArray plateItemArray = new JSONArray();
+                plateItemArray.put(plate_item.getText().toString());
+                obj.put("plate_item", plateItemArray);
                 obj.put("quantity", 1);
                 JSONArray itemPics = new JSONArray();
                 for (int i = 0; i < imageList.size(); i++) {
@@ -297,6 +301,9 @@ public class CustomPlate extends AppCompatActivity implements View.OnClickListen
                 }
 
                 obj.put("item_pics", itemPics);
+                if (editFlag) {
+                    new BaseSync(addPlateListener, loginUrl, obj, CommonUtil.HTTP_PUT).execute();
+                } else
                 new BaseSync(addPlateListener, loginUrl, obj, CommonUtil.HTTP_POST).execute();
             } catch (JSONException e) {
                 e.printStackTrace();

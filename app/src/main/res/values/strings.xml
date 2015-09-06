@@ -69,5 +69,6 @@
     <string name="enter_mobile_number">Enter mobile number</string>
     <string name="sending_otp">Sending OTP</string>
     <string name="enter_otp_msg">Enter OTP</string>
+    <string name="location_not_find">Could not locate</string>
 
 </resources>

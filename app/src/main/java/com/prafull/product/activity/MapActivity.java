@@ -35,16 +35,57 @@ import com.prafull.product.util.GPSHelper;
 
 public class MapActivity extends AppCompatActivity implements View.OnClickListener, GPSHelper.GpsListner, TextView.OnEditorActionListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    private static final int REQUEST_ENABLE_GPS = 5000;
    Button set_address;
+    LatLngBounds NEW_YORK_BOUND;
+    TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
     private GoogleApiClient mGoogleApiClient;
     private LatLng mLastLocation;
     private GoogleMap mMap;
     private MapFragment mapFragment;
     private GPSHelper gpsHelper;
-    private static final int REQUEST_ENABLE_GPS = 5000;
     private AutoCompleteTextView tv_current_loc;
     private PlaceArrayAdapter mPlaceArrayAdapter;
-    LatLngBounds NEW_YORK_BOUND;
+    private String lastLocation;
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
+            = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                return;
+            }
+            com.google.android.gms.location.places.Place place = places.get(0);
+
+            lastLocation = place.getAddress().toString();
+            mLastLocation = place.getLatLng();
+        }
+    };
+    private AdapterView.OnItemClickListener mAutocompleteClickListener
+            = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
+            final String placeId = String.valueOf(item.placeId);
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +117,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -100,7 +140,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
         }
     }
-
 
     void getGpsLocation() {
         if (gpsHelper != null) {
@@ -130,7 +169,8 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                     }
                 });
 
-        dialogBuilder.show();}
+        dialogBuilder.show();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -149,22 +189,31 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.set_address:
-                startActivity(new Intent(MapActivity.this,NavigationDrawerActivity.class));
+                if (mLastLocation != null) {
+                    Bundle b = new Bundle();
+                    Intent intent = new Intent(MapActivity.this, NavigationDrawerActivity.class);
+                    b.putDouble("latitude", mLastLocation.latitude);
+                    b.putDouble("longitude", mLastLocation.longitude);
+                  /*  intent.putExtra("latitude", mLastLocation.latitude);
+                    intent.putExtra("longitude", mLastLocation.longitude);*/
+                    intent.putExtras(b);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.location_not_find), Toast.LENGTH_SHORT).show();
+                }
+
                 break;
         }
     }
 
-
-
-
     @Override
     public void gotCurrentLocation(final LatLng curentLatLng) {
         if (curentLatLng != null) {
-           // this.currentLatLng = currentLatLong;
-           // setDefaultMarker();
-            mLastLocation=curentLatLng;
+            // this.currentLatLng = currentLatLong;
+            // setDefaultMarker();
+            mLastLocation = curentLatLng;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -188,55 +237,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
         return false;
     }
-
-    TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    };
-
-
-    private AdapterView.OnItemClickListener mAutocompleteClickListener
-            = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
-            final String placeId = String.valueOf(item.placeId);
-            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
-            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-
-        }
-    };
-
-
-    private String lastLocation;
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
-        @Override
-        public void onResult(PlaceBuffer places) {
-            if (!places.getStatus().isSuccess()) {
-                return;
-            }
-            com.google.android.gms.location.places.Place place = places.get(0);
-
-            lastLocation = place.getAddress().toString();
-            mLastLocation = place.getLatLng();
-        }
-    };
-
-
-
 
     @Override
     public void onConnected(Bundle bundle) {

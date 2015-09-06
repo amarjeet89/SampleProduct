@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,12 +18,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.prafull.product.R;
 import com.prafull.product.activity.ProductDetailsActivity;
-import com.prafull.product.adapter.PlateListAdapter;
-import com.prafull.product.adapter.ProductImagesAdapter;
 import com.prafull.product.adapter.ProductListAdapter;
-import com.prafull.product.pojo.Plate;
 import com.prafull.product.pojo.Product;
 import com.prafull.product.pojo.ProductImage;
 import com.prafull.product.pulltorefresh.IonRefreshListener;
@@ -44,19 +41,151 @@ import java.util.ArrayList;
  */
 
 public class ProductFragment extends Fragment implements AdapterView.OnItemClickListener, TextView.OnEditorActionListener {
+    ArrayList<ArrayList<String>> images = new ArrayList<>();
+    LatLng mlocation;
     private ProgressDialog loadingProgress;
+    BaseSync.OnTaskCompleted sellerDetailLoadListener = new BaseSync.OnTaskCompleted() {
+
+        @Override
+        public void onTaskCompleted(final String str) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    try {
+                        JSONObject obj = new JSONObject(str);
+                        System.out.println(obj);
+                        if (obj.getString("status").equals("success")) {
+                            // Toast.makeText(getActivity().getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                            if (obj.has("data")) {
+                                Bundle b = new Bundle();
+                                b.putString(CommonUtil.SELLER_DETAILS, obj.toString());
+                                Intent intent = new Intent(getActivity(), ProductDetailsActivity.class);
+                                intent.putExtras(b);
+                                startActivity(intent);
+                            }
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+
+        @Override
+        public void onTaskFailure(final String str) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    Toast.makeText(getActivity().getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    };
     private PullToUpdateListView productListView;
     private ArrayList<Product> productData;
-    ArrayList<ArrayList<String>> images = new ArrayList<>();
+    BaseSync.OnTaskCompleted productLoadListener = new BaseSync.OnTaskCompleted() {
+
+        @Override
+        public void onTaskCompleted(final String str) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    try {
+                        JSONObject obj = new JSONObject(str);
+                        System.out.println(obj);
+                        if (obj.getString("status").equals("success")) {
+                            productData = parseProductData(obj);
+                            ProductListAdapter productDataAdapter = new ProductListAdapter(getActivity(), productData);
+                            if (productListView != null)
+                                productListView.setAdapter(productDataAdapter);
+                        } else {
+                            Toast.makeText(getActivity(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+
+        @Override
+        public void onTaskFailure(final String str) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    };
     private boolean scrollDown = false;
+    BaseSync.OnTaskCompleted productLoadonScrollListener = new BaseSync.OnTaskCompleted() {
+
+        @Override
+        public void onTaskCompleted(final String str) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    try {
+                        JSONObject obj = new JSONObject(str);
+                        System.out.println(obj);
+                        if (obj.getString("status").equals("success")) {
+                            if (scrollDown) {
+                                productData.addAll(parseProductData(obj));
+                                scrollDown = false;
+                            } else
+                                productData = parseProductData(obj);
+
+                            ProductListAdapter productDataAdapter = new ProductListAdapter(getActivity(), productData);
+                            if (productListView != null)
+                                productListView.setAdapter(productDataAdapter);
+                        } else {
+                            Toast.makeText(getActivity(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+        public void onTaskFailure(final String str) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgress.cancel();
+                    Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    };
     private EditText searchText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
+        mlocation = new LatLng(this.getArguments().getDouble("latitude"), this.getArguments().getDouble("longitude"));
         View view = inflater.inflate(R.layout.activity_product_list, null);
         initializeControls(view);
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -105,7 +234,7 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
         if (lastIndex > 0) {
             String userId = productData.get(lastIndex - 1).getUserId();
             String token = ProductPreferences.getInstance(getActivity()).getAccessToken();
-            String sellerListUrl = getString(R.string.base_url) + getString(R.string.seller_Url) + "?token=" + token + "&_id=" + userId;
+            String sellerListUrl = getString(R.string.base_url) + getString(R.string.seller_Url) + "?token=" + token + "&_id=" + userId + "&location=" + mlocation.latitude + "," + mlocation.longitude;
             System.out.println("sellerListUrl : " + sellerListUrl);
             scrollDown = true;
             new BaseSync(productLoadonScrollListener, sellerListUrl, null, CommonUtil.HTTP_GET).execute();
@@ -117,7 +246,7 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
         int lastIndex = productData.size();
         String userId = productData.get(lastIndex - 1).getUserId();
         String token = ProductPreferences.getInstance(getActivity()).getAccessToken();
-        String sellerListUrl = getString(R.string.base_url) + getString(R.string.seller_Url) + "?token=" + token + "&_id=" + userId + getString(R.string.list_pull_up);
+        String sellerListUrl = getString(R.string.base_url) + getString(R.string.seller_Url) + "?token=" + token + "&_id=" + userId + "&location=" + mlocation.latitude + "," + mlocation.longitude + getString(R.string.list_pull_up);
         System.out.println("sellerListUrl : " + sellerListUrl);
         new BaseSync(productLoadonScrollListener, sellerListUrl, null, CommonUtil.HTTP_GET).execute();
 
@@ -125,59 +254,11 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
 
     private void loadProductList() {
         String token = ProductPreferences.getInstance(getActivity()).getAccessToken();
-        String sellerListUrl = getString(R.string.base_url) + getString(R.string.seller_Url) + "?token=" + token + "&limit=" + getString(R.string.item_limit);
+        String sellerListUrl = getString(R.string.base_url) + getString(R.string.seller_Url) + "?token=" + token + "&limit=" + getString(R.string.item_limit) + "&location=" + mlocation.latitude + "," + mlocation.longitude;
         System.out.println("sellerListUrl : " + sellerListUrl);
         loadingProgress.show();
         new BaseSync(productLoadListener, sellerListUrl, null, CommonUtil.HTTP_GET).execute();
     }
-
-
-
-
-    BaseSync.OnTaskCompleted productLoadonScrollListener = new BaseSync.OnTaskCompleted() {
-
-        @Override
-        public void onTaskCompleted(final String str) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    try {
-                        JSONObject obj = new JSONObject(str);
-                        System.out.println(obj);
-                        if (obj.getString("status").equals("success")) {
-                            if (scrollDown) {
-                                productData.addAll(parseProductData(obj));
-                                scrollDown = false;
-                            } else
-                                productData = parseProductData(obj);
-
-                            ProductListAdapter productDataAdapter = new ProductListAdapter(getActivity(), productData);
-                            if (productListView != null)
-                                productListView.setAdapter(productDataAdapter);
-                        } else {
-                            Toast.makeText(getActivity(), obj.getString("status"), Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        }
-
-        public void onTaskFailure(final String str) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    };
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -185,13 +266,12 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_search) {
-            if(searchText.getVisibility()==View.GONE){
+            if (searchText.getVisibility() == View.GONE) {
                 searchText.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 searchText.setVisibility(View.GONE);
             }
             return true;
@@ -199,49 +279,6 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
 
         return super.onOptionsItemSelected(item);
     }
-
-
-    BaseSync.OnTaskCompleted productLoadListener = new BaseSync.OnTaskCompleted() {
-
-        @Override
-        public void onTaskCompleted(final String str) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    try {
-                        JSONObject obj = new JSONObject(str);
-                        System.out.println(obj);
-                        if (obj.getString("status").equals("success")) {
-                            productData = parseProductData(obj);
-                            ProductListAdapter productDataAdapter = new ProductListAdapter(getActivity(), productData);
-                            if (productListView != null)
-                                productListView.setAdapter(productDataAdapter);
-                        } else {
-                            Toast.makeText(getActivity(), obj.getString("status"), Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        }
-
-
-        @Override
-        public void onTaskFailure(final String str) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    };
 
     private ArrayList<Product> parseProductData(JSONObject obj) {
         ArrayList<Product> productData = null;
@@ -307,7 +344,6 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
         new BaseSync(sellerDetailLoadListener, sellerListUrl, null, CommonUtil.HTTP_GET).execute();
     }
 
-
     @Override
     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
         boolean handled = false;
@@ -327,7 +363,7 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
 
     private void searchProductItem(String searchText) {
         String token = ProductPreferences.getInstance(getActivity().getApplicationContext()).getAccessToken();
-        String sellerListUrl = getString(R.string.base_url) + getString(R.string.seller_Url) + "?token=" + token+"&search="+searchText;
+        String sellerListUrl = getString(R.string.base_url) + getString(R.string.seller_Url) + "?token=" + token + "&location=" + mlocation.latitude + "," + mlocation.longitude + "&search=" + searchText;
         System.out.println("sellerListUrl : " + sellerListUrl);
         loadingProgress = new ProgressDialog(getActivity(),
                 ProgressDialog.THEME_HOLO_LIGHT);
@@ -337,52 +373,5 @@ public class ProductFragment extends Fragment implements AdapterView.OnItemClick
         loadingProgress.show();
         new BaseSync(productLoadListener, sellerListUrl, null, CommonUtil.HTTP_GET).execute();
     }
-
-
-    BaseSync.OnTaskCompleted sellerDetailLoadListener = new BaseSync.OnTaskCompleted() {
-
-        @Override
-        public void onTaskCompleted(final String str) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    try {
-                        JSONObject obj = new JSONObject(str);
-                        System.out.println(obj);
-                        if (obj.getString("status").equals("success")) {
-                           // Toast.makeText(getActivity().getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
-                            if (obj.has("data")) {
-                                 Bundle b=new Bundle();
-                                 b.putString(CommonUtil.SELLER_DETAILS,obj.toString());
-                                 Intent intent = new Intent(getActivity(), ProductDetailsActivity.class);
-                                 intent.putExtras(b);
-                                 startActivity(intent);
-                            }
-                        } else {
-                            Toast.makeText(getActivity().getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        }
-
-
-        @Override
-        public void onTaskFailure(final String str) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingProgress.cancel();
-                    Toast.makeText(getActivity().getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    };
 
 }

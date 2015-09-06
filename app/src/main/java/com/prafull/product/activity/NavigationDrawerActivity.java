@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,7 +22,9 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.graphics.drawable.ColorDrawable;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
 import com.prafull.product.R;
 import com.prafull.product.adapter.NavigationDrawerAdapter;
 import com.prafull.product.fragments.EditProfileFragment;
@@ -43,13 +45,14 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     ListView listview;
     ArrayList<NavigationMenu> nav_titles;
     ActionBarDrawerToggle mActionBarDrawerToggle;
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
     LinearLayout leftView;
     LayoutInflater layoutInflater;
     Fragment fragment = null;
     String[] titles;
     TypedArray navMenuIcons;
+    LatLng mlocation;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
     private int lastExpandedPosition = -1;
 
     @Override
@@ -60,9 +63,20 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_navigation);
         initializeControls();
+        Bundle b = getIntent().getExtras();
+        if (b != null) {
+            if (b.containsKey("latitude") && b.containsKey("longitude")) {
+                mlocation = new LatLng(b.getDouble("latitude"), b.getDouble("longitude"));
+                Toast.makeText(getApplicationContext(), "" + b.getDouble("latitude"), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "No values", Toast.LENGTH_SHORT).show();
+            }
+        }
+
         if(savedInstanceState == null){
             displayGenericFragment();
         }
+
     }
 
     private void initializeControls() {
@@ -103,7 +117,11 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
+                        Bundle bundle = new Bundle();
+                        bundle.putDouble("latitude", mlocation.latitude);
+                        bundle.putDouble("longitude", mlocation.longitude);
                         fragment = new ProductFragment();
+                        fragment.setArguments(bundle);
                         break;
                     case 1:
                         fragment = new EditProfileFragment();
@@ -202,7 +220,11 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
 
     private void displayGenericFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putDouble("latitude", mlocation.latitude);
+        bundle.putDouble("longitude", mlocation.longitude);
         fragment = new ProductFragment();
+        fragment.setArguments(bundle);
         FragmentManager fragmentManager = NavigationDrawerActivity.this.getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content_frame, fragment);
