@@ -19,5 +19,6 @@ public class CommonUtil {
     public static final String CONFIRM_ORDER = "confirm_order";
     public static final String EDIT_PLATE_FLAG = "editPlateFlag";
     public static final String PLATE_ID = "plateID";
+    public static final String MESSAGE = "msg";
     public static final int PLATE_REQUEST_CODE = 102;
 }

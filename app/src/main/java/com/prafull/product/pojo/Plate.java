@@ -7,15 +7,25 @@ import android.os.Parcelable;
  * Created by Amar on 03-08-2015.
  */
 public class Plate implements Parcelable {
+    public String getCookTime() {
+        return cookTime;
+    }
+
+    public void setCookTime(String cookTime) {
+        this.cookTime = cookTime;
+    }
+
+    String cookTime;
     String title;
     int qty;
     int price;
     public boolean box;
 
-    public Plate(String title, int qty, int price, boolean box) {
+    public Plate(String title, int qty, int price, String cookingTime, boolean box) {
         this.title = title;
         this.qty = qty;
         this.price = price;
+        this.cookTime= cookingTime;
         this.box = box;
     }
 
@@ -41,6 +51,7 @@ public class Plate implements Parcelable {
         dest.writeString(title);
         dest.writeInt(qty);
         dest.writeInt(price);
+        dest.writeString(cookTime);
     }
 
     public static final Parcelable.Creator<Plate> CREATOR = new Parcelable.Creator<Plate>() {
@@ -60,5 +71,6 @@ public class Plate implements Parcelable {
         this.title = in.readString();
         this.qty = in.readInt();
         this.price = in.readInt();
+        this.cookTime = in.readString();
     }
 }
