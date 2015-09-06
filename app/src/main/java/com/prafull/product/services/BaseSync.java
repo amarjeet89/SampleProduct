@@ -18,6 +18,7 @@ import com.prafull.product.util.CommonUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -34,18 +35,11 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 public class BaseSync extends AsyncTask<String, Void, String> {
-    private String mUrl = null;// post data
     JSONObject mJsonobj;
+    private String mUrl = null;// post data
     private int timeout = 1000;
     private boolean isGet = false;
     private String methodType="POST";
-
-    public interface OnTaskCompleted {
-        void onTaskCompleted(String str);
-
-        void onTaskFailure(String str);
-    }
-
     private OnTaskCompleted listener;
 
     public BaseSync(OnTaskCompleted listener, String url, JSONObject obj, String methodType) {
@@ -68,7 +62,7 @@ public class BaseSync extends AsyncTask<String, Void, String> {
         HttpResponse httpresponse = null;
         try {
 
-            if (methodType== CommonUtil.HTTP_POST) {
+            if (methodType == CommonUtil.HTTP_POST) {
                 StringEntity se = new StringEntity(mJsonobj.toString());
                 se.setContentType("application/json;charset=UTF-8");
                 se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
@@ -76,7 +70,7 @@ public class BaseSync extends AsyncTask<String, Void, String> {
                 httpPostReq.setEntity(se);
                 httpresponse = httpclient.execute(httpPostReq);
             }
-            if(methodType==CommonUtil.HTTP_PUT) {
+            if (methodType == CommonUtil.HTTP_PUT) {
                 StringEntity se = new StringEntity(mJsonobj.toString());
                 se.setContentType("application/json;charset=UTF-8");
                 se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
@@ -84,9 +78,13 @@ public class BaseSync extends AsyncTask<String, Void, String> {
                 httpPut.setEntity(se);
                 httpresponse = httpclient.execute(httpPut);
             }
-            if (methodType==CommonUtil.HTTP_GET){
+            if (methodType == CommonUtil.HTTP_GET) {
                 HttpGet getRequest = new HttpGet(mUrl);
                 httpresponse = httpclient.execute(getRequest);
+            }
+            if (methodType == CommonUtil.HTTP_DELETE) {
+                HttpDelete deleteRequest = new HttpDelete(mUrl);
+                httpresponse = httpclient.execute(deleteRequest);
             }
             HttpEntity entity = httpresponse.getEntity();
             InputStream is = entity.getContent();
@@ -95,7 +93,7 @@ public class BaseSync extends AsyncTask<String, Void, String> {
             StringBuilder sb = new StringBuilder();
             String line = null;
             while ((line = reader.readLine()) != null) {
-                 sb.append(line);
+                sb.append(line);
             }
             is.close();
             output = sb.toString();
@@ -113,17 +111,24 @@ public class BaseSync extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String output) {
-        if (listener != null && output!=null) {
+        if (listener != null && output != null) {
             listener.onTaskCompleted(output);
-       }
+        }
 
     }
+
     @Override
     protected void onPreExecute() {
     }
 
     @Override
     protected void onProgressUpdate(Void... values) {
+    }
+
+    public interface OnTaskCompleted {
+        void onTaskCompleted(String str);
+
+        void onTaskFailure(String str);
     }
 
 }

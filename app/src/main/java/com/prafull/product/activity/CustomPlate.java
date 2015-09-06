@@ -16,6 +16,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -127,7 +130,12 @@ public class CustomPlate extends AppCompatActivity implements View.OnClickListen
                         JSONObject obj = new JSONObject(str);
                         System.out.println(obj);
                         if (obj.getString("status").equals("success")) {
+
                             Toast.makeText(getApplicationContext(), obj.getString("status"), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent();
+                            intent.putExtra("MESSAGE", "success");
+                            setResult(CommonUtil.PLATE_REQUEST_CODE, intent);
+                            finish();//finishing activity
                         } else {
                             Toast.makeText(getApplicationContext(), obj.getString("error_msg"), Toast.LENGTH_SHORT).show();
                         }
@@ -414,5 +422,39 @@ public class CustomPlate extends AppCompatActivity implements View.OnClickListen
             e.printStackTrace();
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_delete_plate, menu);
+
+        if (!editFlag) {
+            for (int i = 0; i < menu.size(); i++)
+                menu.getItem(i).setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_delete) {
+            deletePlate(plateID);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deletePlate(String plateID) {
+        String plateUrl = getString(R.string.base_url) + getString(R.string.Create_Plate_Url) + "/" + plateID +
+                "?token=" + ProductPreferences.getInstance(getApplicationContext()).getAccessToken();
+        System.out.println("plateUrl : " + plateUrl);
+        loadingProgress.setMessage(getString(R.string.delete_msg));
+        loadingProgress.show();
+        new BaseSync(addPlateListener, plateUrl, null, CommonUtil.HTTP_DELETE).execute();
+
+    }
+
 
 }

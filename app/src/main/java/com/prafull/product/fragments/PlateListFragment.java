@@ -44,6 +44,7 @@ public class PlateListFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (loadingProgress != null)
                     loadingProgress.cancel();
                     try {
                         JSONObject obj = new JSONObject(str);
@@ -71,7 +72,8 @@ public class PlateListFragment extends Fragment {
                             Intent intent = new Intent(getActivity(), CustomPlate.class);
                             intent.putExtra(CommonUtil.PLATE_ID, plateItem.getId());
                             intent.putExtra(CommonUtil.EDIT_PLATE_FLAG, true);
-                            startActivity(intent);
+                            startActivityForResult(intent, CommonUtil.PLATE_REQUEST_CODE);
+
                         }
                     });
                 }
@@ -84,6 +86,7 @@ public class PlateListFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (loadingProgress != null)
                     loadingProgress.cancel();
                     Toast.makeText(getActivity().getApplicationContext(), str, Toast.LENGTH_SHORT).show();
                 }
@@ -122,18 +125,16 @@ public class PlateListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.add) {
-            startActivity(new Intent(getActivity(), CustomPlate.class));
+            startActivityForResult(new Intent(getActivity(), CustomPlate.class), CommonUtil.PLATE_REQUEST_CODE);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 
     private ArrayList<PlateItem> parsePlateData(JSONObject obj) {
         ArrayList<PlateItem> plateDataArray = null;
@@ -167,5 +168,13 @@ public class PlateListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CommonUtil.PLATE_REQUEST_CODE) {
+            loadPlateList();
+        }
     }
 }

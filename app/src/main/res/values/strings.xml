@@ -70,5 +70,7 @@
     <string name="sending_otp">Sending OTP</string>
     <string name="enter_otp_msg">Enter OTP</string>
     <string name="location_not_find">Could not locate</string>
+    <string name="action_delete">Delete</string>
+    <string name="delete_msg">Deleting...</string>
 
 </resources>
